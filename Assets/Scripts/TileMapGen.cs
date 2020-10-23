@@ -6,11 +6,10 @@ using UnityEngine.Tilemaps;
 public class TileMapGen : MonoBehaviour
 {
     //public static TileMapGen Instance{set;get;}
-    public TileBase ground1;
+    public TileBase ground1, ground2, ground3;
     public BoundsInt tileArea;
     private Tilemap tileMap;
     
-    // Start is called before the first frame update
     public void Generate()
     {
         tileMap = GetComponent<Tilemap>();

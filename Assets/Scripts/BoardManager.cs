@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
+    public int[,] TileList;
+    public Character[] CharacterList;
+    //public item[] itemList;
 
-    // Start is called before the first frame update
     void Start()
     {
         TMG.Generate();
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         
