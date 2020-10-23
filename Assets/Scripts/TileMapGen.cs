@@ -5,13 +5,13 @@ using UnityEngine.Tilemaps;
 
 public class TileMapGen : MonoBehaviour
 {
-
+    //public static TileMapGen Instance{set;get;}
     public TileBase ground1;
     public BoundsInt tileArea;
     private Tilemap tileMap;
     
     // Start is called before the first frame update
-    void Start()
+    public void Generate()
     {
         tileMap = GetComponent<Tilemap>();
         TileBase[] tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
@@ -24,11 +24,5 @@ public class TileMapGen : MonoBehaviour
         }
 
         tileMap.SetTilesBlock(tileArea, tileArray);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
