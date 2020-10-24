@@ -11,11 +11,11 @@ public class Character : MonoBehaviour
     public int maxHeight{set;get;} public int maxWidth{set;get;}
 
 
-    public void setHealth(int x)
+    public void SetHealth(int x)
     {
         Health = x;
     }
-    public void setSpeed(int x)
+    public void SetSpeed(int x)
     {
         Speed = x;
     }
