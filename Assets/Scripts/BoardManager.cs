@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
 public class BoardManager : MonoBehaviour
@@ -8,7 +9,7 @@ public class BoardManager : MonoBehaviour
     public TileMapGen TMG;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
-    public Character[] CharacterList;
+    private List<Character> CharacterList;
     private int numPlayers;
     private int W, H;
     private const float TILE_SIZE = 1.0f;
@@ -20,6 +21,7 @@ public class BoardManager : MonoBehaviour
         TMG.Generate();
         SetDefaults();
         SpawnAllPlayers();
+        SpawnPlayer(0,4,7);
     }
 
     void Update()
@@ -29,7 +31,7 @@ public class BoardManager : MonoBehaviour
 
     public void SpawnAllPlayers()
     {
-
+        CharacterList = new List<Character>();
     }
 
     public void SetDefaults()
@@ -40,21 +42,17 @@ public class BoardManager : MonoBehaviour
     public void SpawnPlayer(int index, int x, int y)
     {
         GameObject go = Instantiate(CharacterPrefabs[index],GetTileCenter(x,y),Quaternion.identity) as GameObject;
-        //go.transform.SetParent(transform); this is commented out for now because idk what it does
-        CharacterList[index] = go.GetComponent<Character>();
-        CharacterList[index].SetPosition(x,y);
-        CharacterList[index].SetDimensions(W,H);
-        CharacterList[index].SetHealth(100);
-        //CharacterList[index].SetIndex[index]; not sure if need to use index yet
+        go.transform.SetParent(transform);
+        Character player = go.GetComponent<Character>();
+        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealth(100);
+        CharacterList.Add(player);
         numPlayers++;
     }
 
-    private Vector3 GetTileCenter(int x, int z)
-    {//will need to update the offsets/size
-        Vector3 origin = Vector3.zero;
-        origin.x += (TILE_SIZE * x) + TILE_OFFSET;
-        origin.z += (TILE_SIZE * z) + TILE_OFFSET;
-
-        return origin;
+    private Vector3 GetTileCenter(int x, int y)
+    {
+        Tilemap tileMap = GetComponent<Tilemap>();
+        return tileMap.CellToWorld(new Vector3Int(x,y,0));
     }
 }
+
