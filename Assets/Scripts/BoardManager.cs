@@ -54,5 +54,10 @@ public class BoardManager : MonoBehaviour
         Tilemap tileMap = GetComponent<Tilemap>();
         return tileMap.CellToWorld(new Vector3Int(x,y,0));
     }
+
+    public void MovePlayer(int index, int x, int y)
+    {
+        
+    }
 }
 
