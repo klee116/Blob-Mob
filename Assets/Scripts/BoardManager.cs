@@ -26,7 +26,12 @@ public class BoardManager : MonoBehaviour
 
     void Update()
     {
-        
+        #if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                TMG.Generate();
+            }
+        #endif
     }
 
     public void SpawnAllPlayers()
