@@ -370,6 +370,10 @@ MonoBehaviour:
   CharacterPrefabs:
   - {fileID: 4119736676359424531, guid: 779cc8c96a360c143923114977790c44, type: 3}
   - {fileID: 4119736676359424531, guid: 779cc8c96a360c143923114977790c44, type: 3}
+  healthBarPrefab: {fileID: 8352028610238545130, guid: 9a1339be238e448a1bc1847c3eaa998e,
+    type: 3}
+  healthPanelRect: {fileID: 4635364860487537527, guid: ff07397e992334caea19ddd76675d19b,
+    type: 3}
 --- !u!114 &738705363
 MonoBehaviour:
   m_ObjectHideFlags: 0

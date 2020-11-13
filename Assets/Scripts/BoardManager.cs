@@ -49,10 +49,13 @@ public class BoardManager : MonoBehaviour
         GameObject go = Instantiate(CharacterPrefabs[index],GetTileCenter(x,y),Quaternion.identity) as GameObject;
         go.transform.SetParent(transform);
         Character player = go.GetComponent<Character>();
+
         player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealth(100);
+
         CharacterList.Add(player);
         numPlayers++;
     }
+
 
     private Vector3 GetTileCenter(int x, int y)
     {
@@ -62,7 +65,6 @@ public class BoardManager : MonoBehaviour
 
     public void MovePlayer(int index, int x, int y)
     {
-        
+
     }
 }
-
