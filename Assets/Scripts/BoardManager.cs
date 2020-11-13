@@ -98,6 +98,7 @@ public class BoardManager : MonoBehaviour
         //BoardHighlights.Instance.HighlightAllowedMoves(selectedCharacter.PossibleMoves());
         if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0))
         {
+            if (!CharacterList[0].isDead)
             MovePlayer(0,selectionX,selectionY);
             System.Threading.Thread.Sleep(100);
         }

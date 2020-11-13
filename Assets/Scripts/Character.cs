@@ -5,6 +5,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     public int Health{set;get;}
+    public bool isDead;
     public int Speed{set;get;}
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
@@ -15,7 +16,7 @@ public class Character : MonoBehaviour
     public DeathMenu deathMenu;
     void Start()
     {
-       
+       isDead = false;
     }
 
     public void init()
@@ -76,6 +77,7 @@ public class Character : MonoBehaviour
 
     public void Die()
     {
+        isDead = true;
         //deathMenu.ToggleDeathMenu(5); //this doesn't use the deathmenu i placed on the hierarchy
     }
 }
