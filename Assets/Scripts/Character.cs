@@ -12,12 +12,19 @@ public class Character : MonoBehaviour
     public int maxHeight{set;get;} public int maxWidth{set;get;}
     private GameObject healthBar;
 
-    void Start(){
-    healthBar = Instantiate(healthBarPrefab) as GameObject;
-    healthBar.transform.SetParent(transform, false);
-
+    void Start()
+    {
+       
     }
 
+    public void init()
+    {
+        if (healthBar == null)
+        {
+            healthBar = Instantiate(healthBarPrefab) as GameObject;
+            healthBar.transform.SetParent(transform, false);
+        }
+    }
     public void SetHealth(int x)
     {
         healthBar.transform.localScale = new Vector3(x / 100.0f, .1f, 1);
@@ -35,15 +42,9 @@ public class Character : MonoBehaviour
     {
         maxHeight = x; maxWidth = y;
     }
+
     public void getMoves ()
-    {//check for up down left right for movement possbilities
-        /*for (int i = 0; i < maxWidth; i++)
-        {
-            for (int j = 0; j < maxHeight; j++)
-            {
-                possibleMoves[i,j] = false;
-            }
-        }*/
+    {
         for (int i = 0; i < maxWidth; i++)
         {
             for (int j = 0; j < maxHeight; j++)
