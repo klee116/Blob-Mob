@@ -79,7 +79,7 @@ public class BoardManager : MonoBehaviour
         RaycastHit2D hit;  
         hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 25.0f, LayerMask.GetMask("Plane"));
         Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int tile = tileMap.WorldToCell(clickInput);
+        Vector3Int tile = tileMap.WorldToCell(clickInput);  //Something wrong with this. x and y are returning only 2 and 2 for some reason
         Debug.Log(tile);
         if (tile.x <= W && tile.y <= H)
         {
