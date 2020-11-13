@@ -30,6 +30,8 @@ public class BoardManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 TMG.Generate();
+
+                //insert make character lose health here when ready to test
             }
         #endif
     }
@@ -62,7 +64,19 @@ public class BoardManager : MonoBehaviour
 
     public void MovePlayer(int index, int x, int y)
     {
-        
+        CharacterList[index].SetPosition(x,y);
+        CharacterList[index].transform.position = GetTileCenter(x,y);
+        //tilelist update ints? when ints are assigned ig
+    }
+
+    public void DamagePlayer(int index, int damageAmount)
+    {
+        CharacterList[index].Health -= damageAmount;
+        if (CharacterList[index].Health <= 0)
+        {
+            //insert death function here
+ 
+        }
     }
 }
 
