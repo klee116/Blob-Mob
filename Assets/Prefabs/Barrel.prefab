@@ -111,6 +111,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthBarPrefab: {fileID: 8352028610238545130, guid: 9a1339be238e448a1bc1847c3eaa998e,
     type: 3}
+  deathMenu: {fileID: 4208365503585971019, guid: 8d3abf62f12bb494f85470cf977ead89,
+    type: 3}
 --- !u!1 &7882548497412742188
 GameObject:
   m_ObjectHideFlags: 0

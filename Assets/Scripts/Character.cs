@@ -12,6 +12,7 @@ public class Character : MonoBehaviour
     public int maxHeight{set;get;} public int maxWidth{set;get;}
     private GameObject healthBar;
 
+    public DeathMenu deathMenu;
     void Start()
     {
        
@@ -25,10 +26,22 @@ public class Character : MonoBehaviour
             healthBar.transform.SetParent(transform, false);
         }
     }
-    public void SetHealth(int x)
+    public void SetHealthMax()
     {
-        healthBar.transform.localScale = new Vector3(x / 100.0f, .1f, 1);
-        Health = x;
+        healthBar.transform.localScale = new Vector3(100 / 100.0f, .1f, 1);
+        Health = 100;
+    }
+
+    public void ModifyHealth(int x)
+    {
+        Health+=x;
+        if (Health <= 0)
+        {
+            Health = 0;
+        }
+        
+        healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
+        
     }
     public void SetSpeed(int x)
     {
@@ -59,5 +72,10 @@ public class Character : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void Die()
+    {
+        //deathMenu.ToggleDeathMenu(5); //this doesn't use the deathmenu i placed on the hierarchy
     }
 }

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
+
+    private Tilemap tileMap;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
     private List<Character> CharacterList;
@@ -20,6 +22,7 @@ public class BoardManager : MonoBehaviour
 
     void Start()
     {
+        tileMap = GetComponent<Tilemap>();
         TMG.Generate();
         SetDefaults();
         SpawnAllPlayers();
@@ -55,16 +58,15 @@ public class BoardManager : MonoBehaviour
         GameObject go = Instantiate(CharacterPrefabs[index],GetTileCenter(x,y),Quaternion.identity) as GameObject;
         go.transform.SetParent(transform);
         Character player = go.GetComponent<Character>();
-        
+
         player.init();
-        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealth(100);
+        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealthMax();
 
         CharacterList.Add(player);
         numPlayers++;
     }
     private Vector3 GetTileCenter(int x, int y)
     {
-        Tilemap tileMap = GetComponent<Tilemap>();
         return tileMap.CellToWorld(new Vector3Int(x,y,0));
     }
 
@@ -74,17 +76,22 @@ public class BoardManager : MonoBehaviour
         if (!Camera.main)
             return;
         
-        RaycastHit hit; 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition),out hit, 25.0f, LayerMask.GetMask("Plane")))
+        RaycastHit2D hit;  
+        hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 25.0f, LayerMask.GetMask("Plane"));
+        Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int tile = tileMap.WorldToCell(clickInput);
+        Debug.Log(tile);
+        if (tile.x <= W && tile.y <= H)
         {
-            selectionX = (int)hit.point.x;
-            selectionY = (int)hit.point.z; 
+            selectionX = tile.x;
+            selectionY = tile.y; 
         }
         else
         {
             selectionX = -1;
             selectionY = -1;
         }
+        Debug.Log("Selection X " + selectionX + " Selection Y " + selectionY);
     }
     private void waitClick()
     {
@@ -100,16 +107,18 @@ public class BoardManager : MonoBehaviour
     {
         CharacterList[index].SetPosition(x,y);
         CharacterList[index].transform.position = GetTileCenter(x,y);
+
+        DamagePlayer(0,10);
         //tilelist update ints? when ints are assigned ig
     }
 
     public void DamagePlayer(int index, int damageAmount)
     {
-        CharacterList[index].Health -= damageAmount;
+        CharacterList[index].ModifyHealth(-1 * damageAmount);
         if (CharacterList[index].Health <= 0)
         {
             //insert death function here
-
+            CharacterList[index].Die();
         }
     }
 }
