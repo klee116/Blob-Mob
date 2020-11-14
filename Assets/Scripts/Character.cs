@@ -5,15 +5,44 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     public int Health{set;get;}
+    public bool isDead;
     public int Speed{set;get;}
+    public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
     private bool[,] possibleMoves{set;get;}
     public int maxHeight{set;get;} public int maxWidth{set;get;}
+    private GameObject healthBar;
 
-
-    public void SetHealth(int x)
+    public DeathMenu deathMenu;
+    void Start()
     {
-        Health = x;
+       isDead = false;
+    }
+
+    public void init()
+    {
+        if (healthBar == null)
+        {
+            healthBar = Instantiate(healthBarPrefab) as GameObject;
+            healthBar.transform.SetParent(transform, false);
+        }
+    }
+    public void SetHealthMax()
+    {
+        healthBar.transform.localScale = new Vector3(100 / 100.0f, .1f, 1);
+        Health = 100;
+    }
+
+    public void ModifyHealth(int x)
+    {
+        Health+=x;
+        if (Health <= 0)
+        {
+            Health = 0;
+        }
+        
+        healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
+        
     }
     public void SetSpeed(int x)
     {
@@ -27,15 +56,9 @@ public class Character : MonoBehaviour
     {
         maxHeight = x; maxWidth = y;
     }
+
     public void getMoves ()
-    {//check for up down left right for movement possbilities
-        /*for (int i = 0; i < maxWidth; i++)
-        {
-            for (int j = 0; j < maxHeight; j++)
-            {
-                possibleMoves[i,j] = false;
-            }
-        }*/
+    {
         for (int i = 0; i < maxWidth; i++)
         {
             for (int j = 0; j < maxHeight; j++)
@@ -43,12 +66,18 @@ public class Character : MonoBehaviour
                 if (Mathf.Abs(CurrentX - i) + Mathf.Abs(CurrentY - j) <= Speed)
                 {
                     possibleMoves[i,j] = true;
-                } 
+                }
                 else
                 {
                     possibleMoves[i,j] = false;
                 }
             }
         }
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        //deathMenu.ToggleDeathMenu(5); //this doesn't use the deathmenu i placed on the hierarchy
     }
 }

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
+
+    private Tilemap tileMap;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
     private List<Character> CharacterList;
@@ -14,14 +16,16 @@ public class BoardManager : MonoBehaviour
     private int W, H;
     private const float TILE_SIZE = 1.0f;
     private const float TILE_OFFSET = 0.5f;
+    private int selectionX = -1;
+    private int selectionY = -1;
     //public item[] itemList;
 
     void Start()
     {
+        tileMap = GetComponent<Tilemap>();
         TMG.Generate();
         SetDefaults();
         SpawnAllPlayers();
-        SpawnPlayer(0,4,7);
     }
 
     void Update()
@@ -30,13 +34,18 @@ public class BoardManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 TMG.Generate();
+                MovePlayer(0,6,6);
+                //insert make character lose health here when ready to test
             }
         #endif
+        UpdateSelection();
+        waitClick();
     }
 
     public void SpawnAllPlayers()
     {
         CharacterList = new List<Character>();
+        SpawnPlayer(0,4,7);
     }
 
     public void SetDefaults()
@@ -49,20 +58,68 @@ public class BoardManager : MonoBehaviour
         GameObject go = Instantiate(CharacterPrefabs[index],GetTileCenter(x,y),Quaternion.identity) as GameObject;
         go.transform.SetParent(transform);
         Character player = go.GetComponent<Character>();
-        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealth(100);
+
+        player.init();
+        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealthMax();
+
         CharacterList.Add(player);
         numPlayers++;
     }
-
     private Vector3 GetTileCenter(int x, int y)
     {
-        Tilemap tileMap = GetComponent<Tilemap>();
         return tileMap.CellToWorld(new Vector3Int(x,y,0));
+    }
+
+
+    private void UpdateSelection()
+    {
+        if (!Camera.main)
+            return;
+        
+        RaycastHit2D hit;  
+        hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 25.0f, LayerMask.GetMask("Plane"));
+        Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3Int tile = tileMap.WorldToCell(clickInput);  //Something wrong with this. x and y are returning only 2 and 2 for some reason
+        Debug.Log(tile);
+        if (tile.x <= W && tile.y <= H)
+        {
+            selectionX = tile.x;
+            selectionY = tile.y; 
+        }
+        else
+        {
+            selectionX = -1;
+            selectionY = -1;
+        }
+        Debug.Log("Selection X " + selectionX + " Selection Y " + selectionY);
+    }
+    private void waitClick()
+    {
+        //BoardHighlights.Instance.HighlightAllowedMoves(selectedCharacter.PossibleMoves());
+        if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0))
+        {
+            if (!CharacterList[0].isDead)
+            MovePlayer(0,selectionX,selectionY);
+            System.Threading.Thread.Sleep(100);
+        }
     }
 
     public void MovePlayer(int index, int x, int y)
     {
-        
+        CharacterList[index].SetPosition(x,y);
+        CharacterList[index].transform.position = GetTileCenter(x,y);
+
+        DamagePlayer(0,10);
+        //tilelist update ints? when ints are assigned ig
+    }
+
+    public void DamagePlayer(int index, int damageAmount)
+    {
+        CharacterList[index].ModifyHealth(-1 * damageAmount);
+        if (CharacterList[index].Health <= 0)
+        {
+            //insert death function here
+            CharacterList[index].Die();
+        }
     }
 }
-
