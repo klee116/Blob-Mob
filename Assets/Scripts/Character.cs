@@ -31,6 +31,7 @@ public class Character : MonoBehaviour
     {
         healthBar.transform.localScale = new Vector3(100 / 100.0f, .1f, 1);
         Health = 100;
+        isDead = false;
     }
 
     public void ModifyHealth(int x)

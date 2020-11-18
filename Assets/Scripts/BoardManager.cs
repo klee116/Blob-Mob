@@ -37,6 +37,10 @@ public class BoardManager : MonoBehaviour
                 MovePlayer(0,6,6);
                 //insert make character lose health here when ready to test
             }
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                CharacterList[0].SetHealthMax();
+            }
         #endif
         UpdateSelection();
         waitClick();
@@ -81,6 +85,7 @@ public class BoardManager : MonoBehaviour
         Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector3Int tile = tileMap.WorldToCell(clickInput);  //Something wrong with this. x and y are returning only 2 and 2 for some reason
         Debug.Log(tile);
+        
         if (tile.x <= W && tile.y <= H)
         {
             selectionX = tile.x;
