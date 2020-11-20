@@ -9,8 +9,9 @@ public class Character : MonoBehaviour
     public int Speed{set;get;}
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
-    private bool[,] possibleMoves{set;get;}
+    public bool[,] possibleMoves{set;get;}
     public int maxHeight{set;get;} public int maxWidth{set;get;}
+    public int Score;
     private GameObject healthBar;
 
     public DeathMenu deathMenu;
@@ -26,6 +27,8 @@ public class Character : MonoBehaviour
             healthBar = Instantiate(healthBarPrefab) as GameObject;
             healthBar.transform.SetParent(transform, false);
         }
+        SetHealthMax();
+        SetSpeed(3);
     }
     public void SetHealthMax()
     {
@@ -58,8 +61,9 @@ public class Character : MonoBehaviour
         maxHeight = x; maxWidth = y;
     }
 
-    public void getMoves ()
+    public void getMoves()
     {
+        possibleMoves = new bool[maxWidth,maxHeight];
         for (int i = 0; i < maxWidth; i++)
         {
             for (int j = 0; j < maxHeight; j++)
@@ -74,11 +78,5 @@ public class Character : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void Die()
-    {
-        isDead = true;
-        //deathMenu.ToggleDeathMenu(5); //this doesn't use the deathmenu i placed on the hierarchy
     }
 }

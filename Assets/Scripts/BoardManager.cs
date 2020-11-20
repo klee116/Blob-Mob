@@ -8,6 +8,8 @@ public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
 
+    public Vector3 PlayerSpriteOffset;
+    public Vector2 ClickOffset;
     private Tilemap tileMap;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
@@ -19,6 +21,7 @@ public class BoardManager : MonoBehaviour
     private int selectionX = -1;
     private int selectionY = -1;
     //public item[] itemList;
+    public DeathMenu deathMenu;
 
     void Start()
     {
@@ -40,6 +43,10 @@ public class BoardManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.R))
             {
                 CharacterList[0].SetHealthMax();
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                DamagePlayer(0,50);
             }
         #endif
         UpdateSelection();
@@ -64,14 +71,15 @@ public class BoardManager : MonoBehaviour
         Character player = go.GetComponent<Character>();
 
         player.init();
-        player.SetPosition(x,y); player.SetDimensions(W,H); player.SetHealthMax();
+        player.SetPosition(x,y); player.SetDimensions(W,H);
 
         CharacterList.Add(player);
         numPlayers++;
     }
     private Vector3 GetTileCenter(int x, int y)
     {
-        return tileMap.CellToWorld(new Vector3Int(x,y,0));
+        
+        return tileMap.CellToWorld(new Vector3Int(x,y,0)) + PlayerSpriteOffset;
     }
 
 
@@ -83,10 +91,9 @@ public class BoardManager : MonoBehaviour
         RaycastHit2D hit;  
         hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 25.0f, LayerMask.GetMask("Plane"));
         Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int tile = tileMap.WorldToCell(clickInput);  //Something wrong with this. x and y are returning only 2 and 2 for some reason
-        Debug.Log(tile);
-        
-        if (tile.x <= W && tile.y <= H)
+        Vector3Int tile = tileMap.WorldToCell(clickInput + ClickOffset);  
+
+        if (tile.x < W && tile.y < H)
         {
             selectionX = tile.x;
             selectionY = tile.y; 
@@ -96,16 +103,17 @@ public class BoardManager : MonoBehaviour
             selectionX = -1;
             selectionY = -1;
         }
-        Debug.Log("Selection X " + selectionX + " Selection Y " + selectionY);
     }
     private void waitClick()
     {
+        CharacterList[0].getMoves();
         //BoardHighlights.Instance.HighlightAllowedMoves(selectedCharacter.PossibleMoves());
-        if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0))
+        if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0) && CharacterList[0].possibleMoves[selectionX,selectionY])
         {
             if (!CharacterList[0].isDead)
             MovePlayer(0,selectionX,selectionY);
             System.Threading.Thread.Sleep(100);
+
         }
     }
 
@@ -113,8 +121,6 @@ public class BoardManager : MonoBehaviour
     {
         CharacterList[index].SetPosition(x,y);
         CharacterList[index].transform.position = GetTileCenter(x,y);
-
-        DamagePlayer(0,10);
         //tilelist update ints? when ints are assigned ig
     }
 
@@ -124,7 +130,10 @@ public class BoardManager : MonoBehaviour
         if (CharacterList[index].Health <= 0)
         {
             //insert death function here
-            CharacterList[index].Die();
+            CharacterList[index].isDead = true;
+            deathMenu.ToggleDeathMenu(5);
+            
         }
     }
 }
+

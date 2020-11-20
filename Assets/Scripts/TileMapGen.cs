@@ -86,7 +86,7 @@ public class TileMapGen : MonoBehaviour
                     continue;
                 }
 
-                Debug.Log("Checking " + potentialSample);
+                //Debug.Log("Checking " + potentialSample);
 
                 if (poissonGridCheck(potentialSample, cellSize, radius, ref bg_grid, ref points))
                 {
