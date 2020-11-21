@@ -6,7 +6,7 @@ public class Character : MonoBehaviour
 {
     public int Health{set;get;}
     public bool isDead;
-    public int Speed{set;get;}
+    public int Speed;
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
     public bool[,] possibleMoves{set;get;}
