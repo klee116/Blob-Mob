@@ -6,7 +6,8 @@ public class Character : MonoBehaviour
 {
     public int Health{set;get;}
     public bool isDead;
-    public int Speed;
+    public int Speed; //movement speed
+    public int Attack; //attack power
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
     public bool[,] possibleMoves{set;get;}
@@ -51,6 +52,31 @@ public class Character : MonoBehaviour
     public void SetSpeed(int x)
     {
         Speed = x;
+    }
+
+    public void ModifySpeed(int x)
+    {
+        Speed += x;
+
+        if (Speed < 1)
+        {
+            Speed = 1;
+        }
+    }
+
+    public void SetAttack(int x)
+    {
+        Attack = x;
+    }
+
+    public void ModifyAttack(int x)
+    {
+        Attack += x;
+
+        if (Attack < 1)
+        {
+            Attack = 1;
+        }
     }
     public void SetPosition(int x, int y)
     {
