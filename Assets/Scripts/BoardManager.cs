@@ -8,9 +8,11 @@ public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
 
+    public BoardHighlights BoardHighlights;
     public Vector3 PlayerSpriteOffset;
     public Vector2 ClickOffset;
     private Tilemap tileMap;
+    public Tilemap Highlights;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
     private List<Character> CharacterList;
@@ -28,6 +30,8 @@ public class BoardManager : MonoBehaviour
         tileMap = GetComponent<Tilemap>();
         TMG.Generate();
         SetDefaults();
+        BoardHighlights = Highlights.GetComponent<BoardHighlights>();
+        BoardHighlights.Generate(W, H);
         SpawnAllPlayers();
     }
 
@@ -50,6 +54,7 @@ public class BoardManager : MonoBehaviour
             }
         #endif
         UpdateSelection();
+        BoardHighlights.UpdateHighlights(CharacterList[0].getMoves(), selectionX, selectionY);
         waitClick();
     }
 
@@ -104,10 +109,9 @@ public class BoardManager : MonoBehaviour
             selectionY = -1;
         }
     }
+
     private void waitClick()
-    {
-        CharacterList[0].getMoves();
-        //BoardHighlights.Instance.HighlightAllowedMoves(selectedCharacter.PossibleMoves());
+    { 
         if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0) && CharacterList[0].possibleMoves[selectionX,selectionY])
         {
             if (!CharacterList[0].isDead)

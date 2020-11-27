@@ -61,7 +61,7 @@ public class Character : MonoBehaviour
         maxHeight = x; maxWidth = y;
     }
 
-    public void getMoves()
+    public bool[,] getMoves()
     {
         possibleMoves = new bool[maxWidth,maxHeight];
         for (int i = 0; i < maxWidth; i++)
@@ -78,5 +78,6 @@ public class Character : MonoBehaviour
                 }
             }
         }
+        return possibleMoves;
     }
 }
