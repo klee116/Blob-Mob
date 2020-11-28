@@ -33,6 +33,7 @@ public class BoardManager : MonoBehaviour
         BoardHighlights = Highlights.GetComponent<BoardHighlights>();
         BoardHighlights.Generate(W, H);
         SpawnAllPlayers();
+        SpawnInitialItems();
     }
 
     void Update()
@@ -64,6 +65,77 @@ public class BoardManager : MonoBehaviour
         SpawnPlayer(0,4,7);
     }
 
+    public void SpawnInitialItems()
+    {
+        //procgen the first set up items on the board (avoid player spawns ig)
+
+
+    }
+
+    public void SpawnItemWave(int x)
+    {
+        // x = 1-4 , 1 = top, 2 = bottom, 3 = left, 4 = right (side of the map that the next wave of items spawns from)
+
+        if (x == 0) 
+        {
+            // execute 'from top' scenario
+
+            // generate W items (or nulls)
+            // (have a line of items (floating or on tiles that are separate from board) to show incoming items and which direction everything is going to move)
+            // put the items on Row H (top)
+            // delete items on Row 1
+            // all items move y position to position - 1
+        }
+        else if (x == 1)
+        {
+            //execute 'from bottom' scenario
+
+            // generate W items (or nulls)
+            // put the items on Row 1 (bottom)
+            // delete items on Row H
+            // all items move y position to position - 1
+        }
+        else if (x == 2)
+        {
+            //execute 'from left' scenario
+
+            // generate H items (or nulls)
+            // put the items on Column 1 (left)
+            // delete items on Column W
+            // all items move x position to position + 1
+        }
+        else if (x == 3)
+        {
+            //execute 'from right' scenario
+
+            // generate H items (or nulls)
+            // put the items on Column W (right)
+            // delete items on Column 1
+            // all items move x position to position - 1
+        }
+        else
+        {
+            //default to executing from top scenario, this should not execute unless theres an error in code somewhere
+        }
+
+    }
+
+
+    public void ExecuteTurn() // function that drives the turn after receiving all players' turn data (Intended tile (x,y) and intended direction (up/down/left/right)) OR turn timer runs out
+    {
+        // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
+        // Check for player collisions, calculate a winner;
+        // Loser gets thrown into the direction the winner chose to face;
+        // Draw results in both players being knocked away from the spot (need to think about how to deal with being knocked into another player as a result of this
+        //     maybe bump the third player further in the direction)
+        // movement anime
+
+        // Once Players all moved, detect if they've landed on an item, trigger item effects using the direction of the players as a parameter
+        // Resolve effects/Play animations 
+
+        // wait for next turn, generate which direction (up/down/left/right) the next wave of items comes from
+
+    }
     public void SetDefaults()
     {
         numPlayers = 0;
@@ -83,7 +155,6 @@ public class BoardManager : MonoBehaviour
     }
     private Vector3 GetTileCenter(int x, int y)
     {
-        
         return tileMap.CellToWorld(new Vector3Int(x,y,0)) + PlayerSpriteOffset;
     }
 
