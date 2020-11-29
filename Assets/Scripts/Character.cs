@@ -45,9 +45,9 @@ public class Character : MonoBehaviour
         {
             Health = 0;
         }
-        
+
         healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
-        
+
     }
     public void SetSpeed(int x)
     {

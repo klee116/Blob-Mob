@@ -4,6 +4,19 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
+public enum Direction{
+  left,
+  right,
+  up,
+  down
+};
+
+public class Movement {
+  public Vector2Int coordinates;
+  public Direction direction;
+  public int index;
+}
+
 public class BoardManager : MonoBehaviour
 {
     public TileMapGen TMG;
@@ -16,7 +29,9 @@ public class BoardManager : MonoBehaviour
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
     private List<Character> CharacterList;
+    private List<Movement> moves;
     private int numPlayers;
+    private int alivePlayers;
     private int W, H;
     private const float TILE_SIZE = 1.0f;
     private const float TILE_OFFSET = 0.5f;
@@ -57,11 +72,14 @@ public class BoardManager : MonoBehaviour
         UpdateSelection();
         BoardHighlights.UpdateHighlights(CharacterList[0].getMoves(), selectionX, selectionY);
         waitClick();
+
+        receivePlayersInputs();
     }
 
     public void SpawnAllPlayers()
     {
         CharacterList = new List<Character>();
+        moves = new List<Movement>();
         SpawnPlayer(0,4,7);
     }
 
@@ -76,7 +94,7 @@ public class BoardManager : MonoBehaviour
     {
         // x = 1-4 , 1 = top, 2 = bottom, 3 = left, 4 = right (side of the map that the next wave of items spawns from)
 
-        if (x == 0) 
+        if (x == 0)
         {
             // execute 'from top' scenario
 
@@ -123,6 +141,10 @@ public class BoardManager : MonoBehaviour
 
     public void ExecuteTurn() // function that drives the turn after receiving all players' turn data (Intended tile (x,y) and intended direction (up/down/left/right)) OR turn timer runs out
     {
+        foreach (Movement move in moves){
+          MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
+        }
+
         // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
         // Check for player collisions, calculate a winner;
         // Loser gets thrown into the direction the winner chose to face;
@@ -131,7 +153,7 @@ public class BoardManager : MonoBehaviour
         // movement anime
 
         // Once Players all moved, detect if they've landed on an item, trigger item effects using the direction of the players as a parameter
-        // Resolve effects/Play animations 
+        // Resolve effects/Play animations
 
         // wait for next turn, generate which direction (up/down/left/right) the next wave of items comes from
 
@@ -152,6 +174,7 @@ public class BoardManager : MonoBehaviour
 
         CharacterList.Add(player);
         numPlayers++;
+        alivePlayers++;
     }
     private Vector3 GetTileCenter(int x, int y)
     {
@@ -163,16 +186,16 @@ public class BoardManager : MonoBehaviour
     {
         if (!Camera.main)
             return;
-        
-        RaycastHit2D hit;  
+
+        RaycastHit2D hit;
         hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition), 25.0f, LayerMask.GetMask("Plane"));
         Vector2 clickInput = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector3Int tile = tileMap.WorldToCell(clickInput + ClickOffset);  
+        Vector3Int tile = tileMap.WorldToCell(clickInput + ClickOffset);
 
         if (tile.x < W && tile.y < H)
         {
             selectionX = tile.x;
-            selectionY = tile.y; 
+            selectionY = tile.y;
         }
         else
         {
@@ -181,14 +204,28 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    private void receivePlayersInputs(){
+      if(moves.Count == alivePlayers) {
+        ExecuteTurn();
+        moves.Clear();
+      }
+    }
+
     private void waitClick()
-    { 
+    {
         if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0) && CharacterList[0].possibleMoves[selectionX,selectionY])
         {
             if (!CharacterList[0].isDead)
-            MovePlayer(0,selectionX,selectionY);
-            System.Threading.Thread.Sleep(100);
+            {
+              Movement move = new Movement();
+              move.coordinates = new Vector2Int(selectionX,selectionY);
+              move.index = 0;
+              move.direction = Direction.down;
 
+              moves.Add(move);
+              //TODO: send move over photon
+              System.Threading.Thread.Sleep(100);
+          }
         }
     }
 
@@ -205,10 +242,10 @@ public class BoardManager : MonoBehaviour
         if (CharacterList[index].Health <= 0)
         {
             //insert death function here
+            alivePlayers--;
             CharacterList[index].isDead = true;
             deathMenu.ToggleDeathMenu(5);
-            
+
         }
     }
 }
-
