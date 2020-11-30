@@ -37,6 +37,8 @@ public class BoardManager : MonoBehaviour
     private const float TILE_OFFSET = 0.5f;
     private int selectionX = -1;
     private int selectionY = -1;
+
+    private Item item;
     //public item[] itemList;
     public DeathMenu deathMenu;
 
