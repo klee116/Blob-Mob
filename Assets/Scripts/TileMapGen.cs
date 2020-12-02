@@ -7,11 +7,12 @@ public class TileMapGen : MonoBehaviour
 {
     [System.Serializable]
     public struct MapGenOption {
-        TileBase tileBase;
-        int minDistBetweenTiles;
+        public TileBase tileBase;
+        public int minDistBetweenTiles;
     }
     //public static TileMapGen Instance{set;get;}
     public MapGenOption[] mapGenOptions;
+    public TileBase defaultTile;
     public int testSeed;
     public TileBase ground1, ground2, ground3;
     public BoundsInt tileArea;
@@ -36,25 +37,27 @@ public class TileMapGen : MonoBehaviour
     public void Generate()
     {
         intMap = new int[tileArea.size.x, tileArea.size.y];
-        PoissonPlace(1, 5, ref intMap, 30);
-        PoissonPlace(2, 5, ref intMap, 30);
+        // PoissonPlace(1, 5, ref intMap, 30);
+        // PoissonPlace(2, 5, ref intMap, 30);
+
+        for (int i = 0; i < mapGenOptions.Length; i++)
+        {
+            PoissonPlace(i + 1, mapGenOptions[i].minDistBetweenTiles, ref intMap, 30);
+        }
+
         tileMap = GetComponent<Tilemap>();
         TileBase[] tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
         for (int y = 0; y < tileArea.size.y; y++)
         {
             for (int x = 0; x < tileArea.size.x; x++)
             {
-                switch (intMap[x, y])
+                if (intMap[x, y] > 0)
                 {
-                    case 2:
-                        tileArray[y * tileArea.size.x + x] = ground3;
-                        break; 
-                    case 1:
-                        tileArray[y * tileArea.size.x + x] = ground2;
-                        break;                  
-                    default:
-                        tileArray[y * tileArea.size.x + x] = ground1;
-                        break;
+                    tileArray[y * tileArea.size.x + x] = mapGenOptions[intMap[x, y] - 1].tileBase;
+                }
+                else
+                {
+                    tileArray[y * tileArea.size.x + x] = defaultTile;
                 }
             }
         }
@@ -67,25 +70,27 @@ public class TileMapGen : MonoBehaviour
         System.Random generator = new System.Random(seed);
 
         intMap = new int[tileArea.size.x, tileArea.size.y];
-        PoissonPlaceSeed(1, 5, ref generator, ref intMap, 30);
-        PoissonPlaceSeed(2, 5, ref generator, ref intMap, 30);
+        //PoissonPlaceSeed(1, 5, ref generator, ref intMap, 30);
+        //PoissonPlaceSeed(2, 5, ref generator, ref intMap, 30);
+
+        for (int i = 0; i < mapGenOptions.Length; i++)
+        {
+            PoissonPlaceSeed(i + 1, mapGenOptions[i].minDistBetweenTiles, ref generator, ref intMap, 30);
+        }
+
         tileMap = GetComponent<Tilemap>();
         TileBase[] tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
         for (int y = 0; y < tileArea.size.y; y++)
         {
             for (int x = 0; x < tileArea.size.x; x++)
             {
-                switch (intMap[x, y])
+                if (intMap[x, y] > 0)
                 {
-                    case 2:
-                        tileArray[y * tileArea.size.x + x] = ground3;
-                        break; 
-                    case 1:
-                        tileArray[y * tileArea.size.x + x] = ground2;
-                        break;                  
-                    default:
-                        tileArray[y * tileArea.size.x + x] = ground1;
-                        break;
+                    tileArray[y * tileArea.size.x + x] = mapGenOptions[intMap[x, y] - 1].tileBase;
+                }
+                else
+                {
+                    tileArray[y * tileArea.size.x + x] = defaultTile;
                 }
             }
         }
