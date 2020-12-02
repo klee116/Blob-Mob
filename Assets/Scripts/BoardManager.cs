@@ -26,6 +26,7 @@ public class BoardManager : MonoBehaviour
     public Vector2 ClickOffset;
     private Tilemap tileMap;
     public Tilemap Highlights;
+    public Tilemap ItemTilemap;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
     private List<Character> CharacterList;
@@ -38,8 +39,9 @@ public class BoardManager : MonoBehaviour
     private int selectionX = -1;
     private int selectionY = -1;
 
-    private Item item;
-    //public item[] itemList;
+
+    private List<Item> items;
+
     public DeathMenu deathMenu;
 
     void Start()
@@ -51,6 +53,13 @@ public class BoardManager : MonoBehaviour
         BoardHighlights.Generate(W, H);
         SpawnAllPlayers();
         SpawnInitialItems();
+
+        items = new List<Item>();
+
+        BombItem bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(3,4));
+
+        items.Add(bomb);
     }
 
     void Update()
@@ -145,8 +154,17 @@ public class BoardManager : MonoBehaviour
     {
         foreach (Movement move in moves){
           MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
+
+          foreach (Item item in items){
+            if (CharacterList[move.index].GetPosition() == item.GetPosition()){
+              item.Activate(this);
+            }
+          }
         }
 
+
+        ItemController itemController =  ItemTilemap.GetComponent<ItemController>();
+        itemController.SetItems(items);
         // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
         // Check for player collisions, calculate a winner;
         // Loser gets thrown into the direction the winner chose to face;

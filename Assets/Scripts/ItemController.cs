@@ -15,11 +15,15 @@ public class ItemController : MonoBehaviour
     public BoundsInt tileArea;
     private Tilemap tileMap;
 
+    private List<Item> items;
+
+    private Dictionary<int, TileBase> tiles;
 
     // Start is called before the first frame update
     void Start()
     {
-      //SetItems();
+      tiles = new Dictionary<int, TileBase>();
+      tiles.Add(1, bomb);
     }
 
     // Update is called once per frame
@@ -28,15 +32,25 @@ public class ItemController : MonoBehaviour
 
     }
 
-    void SetItems(){//List<Item> items){
+    public void SetItems(List<Item> newItems){
       tileMap = GetComponent<Tilemap>();
       TileBase[] tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
+
+      var dictionary = new Dictionary<Vector2Int, TileBase>();
+
+      foreach ( Item item in newItems) {
+        dictionary.Add(item.GetPosition(), tiles[item.getType()]);
+      }
 
       for (int y = 0; y < tileArea.size.y; y++)
       {
           for (int x = 0; x < tileArea.size.x; x++)
           {
-              tileArray[y * tileArea.size.x + x] = bomb;
+            Vector2Int position = new Vector2Int(x,y);
+            TileBase tile;
+            if (dictionary.TryGetValue(position, out tile)){
+              tileArray[y * tileArea.size.x + x] = tile;
+            }
           }
       }
 

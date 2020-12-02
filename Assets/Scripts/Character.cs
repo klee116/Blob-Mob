@@ -82,6 +82,10 @@ public class Character : MonoBehaviour
     {
         CurrentX = x; CurrentY = y;
     }
+    public Vector2Int GetPosition() {
+      return new Vector2Int(CurrentX,CurrentY);
+    }
+
     public void SetDimensions(int x, int y)
     {
         maxHeight = x; maxWidth = y;
