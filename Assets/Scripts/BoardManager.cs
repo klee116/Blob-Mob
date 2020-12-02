@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour
     public Tilemap ItemTilemap;
     public int[,] TileList;
     public GameObject[] CharacterPrefabs;
-    private List<Character> CharacterList;
+    public List<Character> CharacterList;
     private List<Movement> moves;
     private int numPlayers;
     private int alivePlayers;
@@ -57,7 +57,22 @@ public class BoardManager : MonoBehaviour
         items = new List<Item>();
 
         BombItem bomb = new BombItem();
-        bomb.SetPosition(new Vector2Int(3,4));
+        bomb.SetPosition(new Vector2Int(5,3));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(6,3));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(4,4));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(5,2));
 
         items.Add(bomb);
     }
@@ -92,6 +107,8 @@ public class BoardManager : MonoBehaviour
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0,4,7);
+        SpawnPlayer(1,3,3);
+        SpawnPlayer(2,5,3);
     }
 
     public void SpawnInitialItems()

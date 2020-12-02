@@ -31,6 +31,23 @@ public class BombItem : MonoBehaviour, Item
     }
 
     public void Activate(BoardManager boardManager){
-      boardManager.DamagePlayer(0, 40);
+
+      Character activator = boardManager.CharacterList[0];
+
+      foreach (Character character in boardManager.CharacterList){
+        if ( character.GetPosition() ==  position ){
+          activator = character;
+        }
+      }
+
+      foreach (Character character in boardManager.CharacterList){
+        if ((((character.GetPosition().x == position.x)
+            && ( Mathf.Abs(character.GetPosition().y - position.y) < activator.GetAttack())
+          ) || ((character.GetPosition().y == position.y)
+            && ( Mathf.Abs(character.GetPosition().x - position.x) < activator.GetAttack())
+          )) && character != activator ) {
+              character.ModifyHealth(-10);
+          }
+        }
     }
 }

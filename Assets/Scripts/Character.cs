@@ -30,6 +30,7 @@ public class Character : MonoBehaviour
         }
         SetHealthMax();
         SetSpeed(3);
+        SetAttack(3);
     }
     public void SetHealthMax()
     {
@@ -67,6 +68,10 @@ public class Character : MonoBehaviour
     public void SetAttack(int x)
     {
         Attack = x;
+    }
+
+    public int GetAttack(){
+      return Attack;
     }
 
     public void ModifyAttack(int x)
