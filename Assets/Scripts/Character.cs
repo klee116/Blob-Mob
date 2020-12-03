@@ -23,16 +23,18 @@ public class Character : MonoBehaviour
        isDead = false;
     }
 
-    public void init()
+    public void init(int x, int y, int i)
     {
         if (healthBar == null)
         {
             healthBar = Instantiate(healthBarPrefab) as GameObject;
             healthBar.transform.SetParent(transform, false);
         }
+        possibleMoves = new bool[x,y];
+        maxHeight = x; maxWidth = y;
+        Speed = 3; Attack = 3; Index = i;
         SetHealthMax();
-        SetSpeed(3);
-        SetAttack(3);
+        getMoves();
     }
     public bool SetHealthMax()
     {
@@ -58,10 +60,6 @@ public class Character : MonoBehaviour
         healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
 
     }
-    public void SetSpeed(int x)
-    {
-        Speed = x;
-    }
     public void ModifySpeed(int x)
     {
         Speed += x;
@@ -70,10 +68,6 @@ public class Character : MonoBehaviour
         {
             Speed = 1;
         }
-    }
-    public void SetAttack(int x)
-    {
-        Attack = x;
     }
     public int GetAttack(){
       return Attack;
@@ -94,10 +88,6 @@ public class Character : MonoBehaviour
     public Vector2Int GetPosition() {
       return new Vector2Int(CurrentX,CurrentY);
     }
-    public void SetDimensions(int x, int y)
-    {
-        maxHeight = x; maxWidth = y;
-    }
     public void SetIndex(int x)
     {
         Index = x;
@@ -108,7 +98,6 @@ public class Character : MonoBehaviour
     }
     public bool[,] getMoves()
     {
-        possibleMoves = new bool[maxWidth,maxHeight];
         for (int i = 0; i < maxWidth; i++)
         {
             for (int j = 0; j < maxHeight; j++)

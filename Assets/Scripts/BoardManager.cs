@@ -3,15 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using UnityEngine.Assertions;
 
-public enum Direction
-{
-    left,
-    right,
-    up,
-    down
-};
-
+public enum Direction { left, right, up, down };
 public class Movement
 {
     public Vector2Int coordinates;
@@ -43,7 +37,7 @@ public class BoardManager : MonoBehaviour
     private int selectionY = -1;
     private List<Item> items;
     public DeathMenu deathMenu;
-
+    bool SecondClick; Movement move;
     void Start()
     {
         tileMap = GetComponent<Tilemap>();
@@ -59,6 +53,7 @@ public class BoardManager : MonoBehaviour
 
     void Update()
     {
+        UpdateSelection();
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -78,10 +73,13 @@ public class BoardManager : MonoBehaviour
         {
             DamagePlayer(0, 50);
         }
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            SpawnItem(1, new Vector2Int(selectionX, selectionY));
+        }
 #endif
-        UpdateSelection();
-        BoardHighlights.UpdateHighlights(CharacterList[ActivePlayer].getMoves(), selectionX, selectionY);
         waitClick();
+
         receivePlayersInputs();
     }
 
@@ -96,24 +94,14 @@ public class BoardManager : MonoBehaviour
 
     private void CycleActivePlayer()
     {
-        int counter = 0;
-        do
+        if (ActivePlayer >= numPlayers - 1 || ActivePlayer < 0)
         {
-            if (ActivePlayer == numPlayers - 1)
-            {
-                ActivePlayer = 0;
-            }
-            else
-            {
-                ActivePlayer++;
-            }
-            counter++;
-            if (counter >= 10)
-            {
-                ActivePlayer = 0;
-                break;
-            }
-        } while (CharacterList[ActivePlayer].isDead);
+            ActivePlayer = 0;
+        }
+        else
+        {
+            ActivePlayer++;
+        }
     }
     public void SpawnPlayer(int index, int x, int y)
     {
@@ -121,11 +109,10 @@ public class BoardManager : MonoBehaviour
         go.transform.SetParent(transform);
         Character player = go.GetComponent<Character>();
 
-        player.init();
-        player.SetPosition(x, y); player.SetDimensions(W, H);
+        player.init(W, H, index);
+        player.SetPosition(x, y);
 
         CharacterList.Add(player);
-        CharacterList[index].SetIndex(index);
         numPlayers++;
         alivePlayers++;
     }
@@ -156,6 +143,27 @@ public class BoardManager : MonoBehaviour
         itemController.SetItems(items);
     }
 
+    public void SpawnItem(int type, Vector2Int position)
+    {
+        Item toAdd = new BombItem();
+        if (type == 1)
+        {
+            toAdd = new BombItem();
+        }
+        else if (type == 2)
+        {
+            toAdd = new BombItem();
+        }
+
+        else //default to bomb
+        {
+
+        }
+
+        toAdd.SetPosition(position);
+        items.Add(toAdd);
+        itemController.SetTile(type, position);
+    }
     public void SpawnItemWave(int x)
     {
         // x = 1-4 , 1 = top, 2 = bottom, 3 = left, 4 = right (side of the map that the next wave of items spawns from)
@@ -209,7 +217,6 @@ public class BoardManager : MonoBehaviour
         foreach (Movement move in moves)
         {
             MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
-
             List<Item> toRemove = new List<Item>();
             foreach (Item item in items)
             {
@@ -225,7 +232,6 @@ public class BoardManager : MonoBehaviour
                 items.Remove(item);
             }
         }
-
         // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
         // Check for player collisions, calculate a winner;
         // Loser gets thrown into the direction the winner chose to face;
@@ -239,11 +245,18 @@ public class BoardManager : MonoBehaviour
         // wait for next turn, generate which direction (up/down/left/right) the next wave of items comes from
 
     }
+
+    public void FightOverTile(List<int> indices)
+    {
+        return;
+    }
     public void SetDefaults()
     {
         numPlayers = 0;
         ActivePlayer = 0;
         H = TMG.tileArea.size.y; W = TMG.tileArea.size.x;
+        SecondClick = false;
+        move = new Movement();
     }
     private Vector3 GetTileCenter(int x, int y)
     {
@@ -283,21 +296,72 @@ public class BoardManager : MonoBehaviour
 
     private void waitClick()
     {
-        if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0) && CharacterList[ActivePlayer].possibleMoves[selectionX, selectionY])
+        BoardHighlights.UpdatePlayerHighlights(CharacterList[ActivePlayer].getMoves(), selectionX, selectionY, SecondClick, move);
+        if (SecondClick)
         {
-            if (!CharacterList[ActivePlayer].isDead)
+            waitSecondClick(move);
+        }
+        else if (!SecondClick)
+        {
+            move = new Movement();
+            if (Input.GetMouseButtonDown(0) && (selectionX >= 0 && selectionY >= 0 && selectionX < W && selectionY < H) &&
+                CharacterList[ActivePlayer].possibleMoves[selectionX, selectionY])
             {
-                Movement move = new Movement();
-                move.coordinates = new Vector2Int(selectionX, selectionY);
-                move.index = ActivePlayer;
-                move.direction = Direction.down;
-
-                moves.Add(move);
-                CycleActivePlayer();
-                //TODO: send move over photon
-                System.Threading.Thread.Sleep(100);
+                if (!CharacterList[ActivePlayer].isDead)
+                {
+                    move.coordinates = new Vector2Int(selectionX, selectionY);
+                    move.index = ActivePlayer;
+                    SecondClick = true;
+                    //move.direction = Direction.down;
+                    //TODO: send move over photon
+                    System.Threading.Thread.Sleep(100);
+                }
             }
         }
+    }
+
+    private void waitSecondClick(Movement move)
+    {
+        if (!SecondClick)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            if ((selectionX == move.coordinates.x + 1) && (selectionY == move.coordinates.y) && (!CharacterList[ActivePlayer].isDead))
+            {
+                move.direction = Direction.right;
+            }
+            else if ((selectionX == move.coordinates.x - 1) && (selectionY == move.coordinates.y))
+            {
+                move.direction = Direction.left;
+            }
+            else if ((selectionX == move.coordinates.x) && (selectionY == move.coordinates.y + 1))
+            {
+                move.direction = Direction.up;
+            }
+            else if ((selectionX == move.coordinates.x) && (selectionY == move.coordinates.y - 1))
+            {
+                if (!CharacterList[ActivePlayer].isDead)
+                {
+                    move.direction = Direction.down;
+
+                }
+            }
+            else
+            {
+                SecondClick = false;
+                return;
+            }
+            Debug.Log("moving player " + move.index + " to (" + move.coordinates.x + "," + move.coordinates.y + " facing " + move.direction);
+            moves.Add(move);
+            CycleActivePlayer();
+            SecondClick = false;
+            //TODO: send move over photon
+            System.Threading.Thread.Sleep(100);
+        }
+
     }
 
     public void MovePlayer(int index, int x, int y)
