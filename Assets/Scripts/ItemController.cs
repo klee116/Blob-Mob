@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.Assertions;
 
 public class ItemController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ItemController : MonoBehaviour
     */
 
     public TileBase bomb;
+    public TileBase noItem;
 
     public BoundsInt tileArea;
     private Tilemap tileMap;
@@ -18,12 +20,19 @@ public class ItemController : MonoBehaviour
     private List<Item> items;
 
     private Dictionary<int, TileBase> tiles;
-
+    TileBase[] tileArray;
     // Start is called before the first frame update
-    void Start()
+
+    public void init()
     {
-      tiles = new Dictionary<int, TileBase>();
+      if (tiles == null)
+      {
+        tiles = new Dictionary<int, TileBase>();
+      }
+      tiles.Add(0, noItem);
       tiles.Add(1, bomb);
+      tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
+
     }
 
     // Update is called once per frame
@@ -34,9 +43,13 @@ public class ItemController : MonoBehaviour
 
     public void SetItems(List<Item> newItems){
       tileMap = GetComponent<Tilemap>();
-      TileBase[] tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
 
       var dictionary = new Dictionary<Vector2Int, TileBase>();
+
+      if (tiles == null)
+      {
+        init();
+      }
 
       foreach ( Item item in newItems) {
         dictionary.Add(item.GetPosition(), tiles[item.getType()]);
@@ -48,12 +61,20 @@ public class ItemController : MonoBehaviour
           {
             Vector2Int position = new Vector2Int(x,y);
             TileBase tile;
-            if (dictionary.TryGetValue(position, out tile)){
+            if (dictionary.TryGetValue(position, out tile))
+            {
               tileArray[y * tileArea.size.x + x] = tile;
             }
           }
       }
 
       tileMap.SetTilesBlock(tileArea, tileArray);
+    }
+
+    public void Activated(Vector2Int position)
+    {
+      tileArray[position.y * tileArea.size.x + position.x] = null;
+      tileMap.SetTilesBlock(tileArea, tileArray);
+
     }
 }

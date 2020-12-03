@@ -17,7 +17,10 @@ public class BombItem : MonoBehaviour, Item
 
     }
     Vector2Int position;
-
+    public void setType(int x)
+    {
+      type = x;
+    }
     public void SetPosition(Vector2Int newPosition){
       position = newPosition;
     }
@@ -34,20 +37,25 @@ public class BombItem : MonoBehaviour, Item
 
       Character activator = boardManager.CharacterList[0];
 
-      foreach (Character character in boardManager.CharacterList){
-        if ( character.GetPosition() ==  position ){
+      foreach (Character character in boardManager.CharacterList)
+      {
+        if ( character.GetPosition() == position )
+        {
           activator = character;
         }
       }
 
-      foreach (Character character in boardManager.CharacterList){
+      foreach (Character character in boardManager.CharacterList)
+      {
         if ((((character.GetPosition().x == position.x)
-            && ( Mathf.Abs(character.GetPosition().y - position.y) < activator.GetAttack())
+          && ( Mathf.Abs(character.GetPosition().y - position.y) < activator.GetAttack())
           ) || ((character.GetPosition().y == position.y)
             && ( Mathf.Abs(character.GetPosition().x - position.x) < activator.GetAttack())
-          )) && character != activator ) {
-              character.ModifyHealth(-10);
-          }
+          )) && character != activator && !character.isDead) 
+        {
+            boardManager.DamagePlayer(character.GetIndex(), 40);
         }
+      }
+      
     }
 }
