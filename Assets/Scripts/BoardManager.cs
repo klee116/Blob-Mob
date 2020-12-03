@@ -90,7 +90,7 @@ public class BoardManager : MonoBehaviour
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
-        //SpawnPlayer(1, 3, 3);
+        SpawnPlayer(1, 3, 3);
         //SpawnPlayer(2, 5, 3);
     }
 
@@ -223,7 +223,6 @@ public class BoardManager : MonoBehaviour
             foreach (Item item in toRemove)
             {
                 items.Remove(item);
-                Debug.Log("length: " + items.Count);
             }
         }
 
