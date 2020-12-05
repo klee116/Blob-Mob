@@ -14,7 +14,14 @@ public class DeathMenu : MonoBehaviour
 
     public void ToggleDeathMenu(int Score)
     {
-        gameObject.SetActive(true);
+        if (!gameObject.activeInHierarchy)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
         scoreText.text = "TEST SCORE TEXT";
         //scoreText.text = INSERT PLAYER'S SCORE HERE!``````````````````````
     }

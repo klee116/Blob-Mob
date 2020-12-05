@@ -4,5 +4,9 @@ using UnityEngine;
 
 public interface Item
 {
-    void Activate(List<Character> characters);
+    void setType(int x);
+    int getType();
+    Vector2Int GetPosition();
+    void SetPosition(Vector2Int newPosition);
+    void Activate(BoardManager boardManager);
 }

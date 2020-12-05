@@ -30,29 +30,53 @@ public class BoardHighlights : MonoBehaviour
         tileArray = new TileBase[tileArea.size.x * tileArea.size.y];
     }
 
-    public void UpdateHighlights(bool[,] possibleMoves, int X, int Y)
+    public void UpdatePlayerHighlights(bool[,] possibleMoves, int X, int Y, bool SecondClick, Movement move)
     {
-        for (int y = 0; y < tileArea.size.y; y++)
+        if (!SecondClick)
         {
-            for (int x = 0; x < tileArea.size.x; x++)
+            for (int y = 0; y < tileArea.size.y; y++)
             {
-                switch (possibleMoves[x, y])
+                for (int x = 0; x < tileArea.size.x; x++)
                 {
-                    case false:
-                        tileArray[y * tileArea.size.x + x] = null;
-                        break; 
-                    case true:
-                        tileArray[y * tileArea.size.x + x] = possible;
-                        break;                  
+                    switch (possibleMoves[x, y])
+                    {
+                        case false:
+                            tileArray[y * tileArea.size.x + x] = null;
+                            break; 
+                        case true:
+                            tileArray[y * tileArea.size.x + x] = possible;
+                            break;                  
+                    }
                 }
             }
         }
-    
-        if ((X >= 0 && Y >= 0) && (X < tileArea.size.x && Y < tileArea.size.y) && possibleMoves[X,Y])
+        else 
+        {
+            for (int y = 0; y < tileArea.size.y; y++)
+            {
+                for (int x = 0; x < tileArea.size.x; x++)
+                {
+                    if (Mathf.Abs(x - move.coordinates.x) + Mathf.Abs(y - move.coordinates.y) == 1)
+                    {
+                        tileArray[y * tileArea.size.x + x] = possible;
+                    }
+                    else
+                    {
+                        tileArray[y * tileArea.size.x + x] = null;
+                    }
+                }
+            }
+        }
+        if ((X >= 0 && Y >= 0) && (X < tileArea.size.x && Y < tileArea.size.y) && tileArray[Y * tileArea.size.x + X] == possible)
         {
             tileArray[Y * tileArea.size.x + X] = selected;
         }
 
         tileMap.SetTilesBlock(tileArea, tileArray);
+    }
+
+    public void SecondClickHighlights(Movement move)
+    {
+
     }
 }
