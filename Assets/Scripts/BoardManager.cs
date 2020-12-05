@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using UnityEngine.Assertions;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public enum Direction { left, right, up, down };
 public class Movement
@@ -13,8 +16,10 @@ public class Movement
     public int index;
 }
 
-public class BoardManager : MonoBehaviour
+public class BoardManager : MonoBehaviour, IOnEventCallback
 {
+    public const byte SendMoveEventCode = 1;
+    public const byte FinishInitEventCode = 2;
     public TileMapGen TMG;
     public BoardHighlights BoardHighlights;
     public Vector3 PlayerSpriteOffset;
@@ -36,6 +41,7 @@ public class BoardManager : MonoBehaviour
     private int selectionX = -1;
     private int selectionY = -1;
     private List<Item> items;
+    private List<bool> initializedPlayers;
     public DeathMenu deathMenu;
     bool SecondClick; Movement move;
     void Start()
@@ -46,6 +52,7 @@ public class BoardManager : MonoBehaviour
         BoardHighlights = Highlights.GetComponent<BoardHighlights>();
         BoardHighlights.Generate(W, H);
         SpawnAllPlayers();
+        initializedPlayers = new List<bool>(numPlayers);
         items = new List<Item>();
         itemController = ItemTilemap.GetComponent<ItemController>();
         SpawnInitialItems();
@@ -382,6 +389,48 @@ public class BoardManager : MonoBehaviour
             // if(PhotonNetwork.PlayerList.IsLocal)
             deathMenu.ToggleDeathMenu(5);
 
+        }
+    }
+
+    // Sends the moves of the active player to every other player
+    private void SendFinishInitEvent()
+    {
+        object[] content = new object[1];
+        content[0] = ActivePlayer;
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
+        PhotonNetwork.RaiseEvent(FinishInitEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    // Sends the moves of the active player to every other player
+    private void SendMoveEvent()
+    {
+        object[] content = new object[2];
+        content[0] = ActivePlayer;
+        content[1] = moves[ActivePlayer];
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
+        PhotonNetwork.RaiseEvent(SendMoveEventCode, content, raiseEventOptions, SendOptions.SendReliable);
+    }
+
+    // Receive events from other players, used for making sure everyone initialized and receiving turns
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        object[] data = (object[])photonEvent.CustomData;
+
+        switch (eventCode)
+        {
+            case SendMoveEventCode:
+                int movedPlayer = (int)data[0];
+                Movement move = (Movement)data[1];
+                moves[movedPlayer] = move;
+                break;
+            case FinishInitEventCode:
+                int initPlayer = (int)data[0];
+                initializedPlayers[initPlayer] = true;
+                break;
+            default:
+                Debug.LogError("Unrecognized event received! Code of " + eventCode);
+                break;
         }
     }
 }

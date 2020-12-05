@@ -7,6 +7,7 @@ using Photon.Realtime;
 public class RoomLauncher : MonoBehaviourPunCallbacks
 {
     public const string SEED_PROP_KEY = "seed";
+    public int currRoomSeed;
 
     [SerializeField]
     private byte maxPlayersPerRoom = 4;
@@ -57,5 +58,27 @@ public class RoomLauncher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         Debug.Log("Now in room " + PhotonNetwork.CurrentRoom.ToString());
+    }
+
+    public override void OnPlayerEnteredRoom(Player other)
+    {
+        Debug.LogFormat("Someone else entered the room: {0}", other.NickName); // not seen if you're the player connecting
+
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
+            LoadLevel();
+        }
+        
+    }
+
+    private void LoadLevel()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogError("Trying to Load a level but we are not the master client o no");
+            PhotonNetwork.LoadLevel("ProcGenTest");
+        }
     }
 }
