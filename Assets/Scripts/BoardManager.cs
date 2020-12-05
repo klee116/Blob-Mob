@@ -48,6 +48,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     {
         tileMap = GetComponent<Tilemap>();
         TMG.Generate();
+        // object seed;
+        // PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoomLauncher.SEED_PROP_KEY, out seed);
+        // TMG.GenerateWithSeed((int) seed);
         SetDefaults();
         BoardHighlights = Highlights.GetComponent<BoardHighlights>();
         BoardHighlights.Generate(W, H);
@@ -146,6 +149,18 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         bomb.SetPosition(new Vector2Int(5, 2));
 
         items.Add(bomb);
+
+        HealItem health = new HealItem();
+
+        health.SetPosition(new Vector2Int(3, 3));
+
+        items.Add(health);
+
+        AttackItem attack = new AttackItem();
+
+        attack.SetPosition(new Vector2Int(2, 2));
+
+        items.Add(attack);
 
         itemController.SetItems(items);
     }
