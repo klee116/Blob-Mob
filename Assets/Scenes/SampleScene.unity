@@ -838,8 +838,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdf8a823571fe45179e64a784711fa3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bomb: {fileID: 11400000, guid: 14836e38d81d44ffdabaa3cdc069a1cd, type: 2}
   noItem: {fileID: 11400000, guid: b99308d2245305d4da7b89c9442094a2, type: 2}
+  bomb: {fileID: 11400000, guid: 14836e38d81d44ffdabaa3cdc069a1cd, type: 2}
+  health: {fileID: 11400000, guid: c5b226f36b8cc5540af254a4e58ad63f, type: 2}
+  attack: {fileID: 11400000, guid: 290af8330ce7ecb46a33394e43d0950d, type: 2}
   tileArea:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 15, y: 15, z: 1}
