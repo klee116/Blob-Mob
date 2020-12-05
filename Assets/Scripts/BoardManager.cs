@@ -140,6 +140,18 @@ public class BoardManager : MonoBehaviour
 
         items.Add(bomb);
 
+        HealItem health = new HealItem();
+
+        health.SetPosition(new Vector2Int(3, 3));
+
+        items.Add(health);
+
+        AttackItem attack = new AttackItem();
+
+        attack.SetPosition(new Vector2Int(2, 2));
+
+        items.Add(attack);
+
         itemController.SetItems(items);
     }
 

@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombItem : Item
+public class AttackItem : Item
 {
-    int type = 1;
+    int type = 3;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,27 +35,12 @@ public class BombItem : Item
 
     public void Activate(BoardManager boardManager){
 
-      Character activator = boardManager.CharacterList[0];
-
       foreach (Character character in boardManager.CharacterList)
       {
         if ( character.GetPosition() == position )
         {
-          activator = character;
+          character.ModifyAttack(1);
         }
       }
-
-      foreach (Character character in boardManager.CharacterList)
-      {
-        if ((((character.GetPosition().x == position.x)
-          && ( Mathf.Abs(character.GetPosition().y - position.y) < activator.GetAttack())
-          ) || ((character.GetPosition().y == position.y)
-            && ( Mathf.Abs(character.GetPosition().x - position.x) < activator.GetAttack())
-          )) && character != activator && !character.isDead)
-        {
-            boardManager.DamagePlayer(character.GetIndex(), 25 * activator.GetAttack());
-        }
-      }
-
     }
 }

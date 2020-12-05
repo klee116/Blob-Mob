@@ -11,8 +11,12 @@ public class ItemController : MonoBehaviour
     gets list of items from board manager
     */
 
-    public TileBase bomb;
+
     public TileBase noItem;
+    public TileBase bomb;
+    public TileBase health;
+    public TileBase attack;
+
 
     public BoundsInt tileArea;
     private Tilemap tileMap;
@@ -31,6 +35,8 @@ public class ItemController : MonoBehaviour
       }
       tiles.Add(0, noItem);
       tiles.Add(1, bomb);
+      tiles.Add(2, health);
+      tiles.Add(3, attack);
       tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
 
     }
