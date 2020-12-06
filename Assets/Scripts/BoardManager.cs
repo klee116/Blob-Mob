@@ -14,6 +14,8 @@ public class Movement
     public Vector2Int coordinates;
     public Direction direction;
     public int index;
+    public int roll = -1;
+
 }
 
 public class BoardManager : MonoBehaviour, IOnEventCallback
@@ -236,6 +238,81 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
     public void ExecuteTurn() // function that drives the turn after receiving all players' turn data (Intended tile (x,y) and intended direction (up/down/left/right)) OR turn timer runs out
     {
+        bool done = false;
+        while (done == false)
+        {
+            List<Movement> Showdowns = new List<Movement>();
+            bool matched = false;
+            for (int i = 0; i < moves.Count && !matched; i++)
+            {
+                 //TODO: something about multiplayer rng
+                for (int j = i + 1; j < moves.Count && !matched; j++)
+                {
+                    if (moves[i].coordinates == moves[j].coordinates)
+                    {
+                        Showdowns.Add(moves[i]); Showdowns.Add(moves[j]);
+                        matched = true;
+                        Debug.Log("Added move by player " + moves[i].index);
+                        Debug.Log("Added move by player " + moves[j].index);
+                        //move i and j go to the showdown
+                        for (int k = j + 1; k < moves.Count; k++)
+                        {
+                            if (moves[i].coordinates == moves[k].coordinates)
+                            {
+                                Showdowns.Add(moves[k]);
+                                Debug.Log("Added move by player " + moves[k].index);
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            int winnerIndex = -1; int tempMax = -1;
+
+            foreach (Movement i in Showdowns)
+            {
+                i.roll = Random.Range(1, 6) + CharacterList[i.index].GetAttack() - 3;
+                Debug.Log("Player " + i.index + " rolled a " + i.roll + "!");
+                if (i.roll > tempMax)
+                {
+                    tempMax = i.roll;
+                    winnerIndex = i.index;
+                }
+            }
+
+            if (winnerIndex != -1)
+            {
+                Debug.Log("Player " + winnerIndex + "Wins!");
+            }
+
+            List<Movement> toRemove = new List<Movement>();
+            foreach (Movement i in Showdowns)
+            {
+                if (i.index != winnerIndex)
+                {
+                    DamagePlayer(i.index, 50);
+                    toRemove.Add(i);
+                }
+            }
+            foreach (Movement i in toRemove)
+            {
+                moves.Remove(i);
+            }
+            done = true;
+            //Debug.Log("done is true");
+            for (int i = 0; i < moves.Count; i++)
+            {
+                for (int j = i + 1; j < moves.Count; j++)
+                {
+                    if (moves[i].coordinates == moves[j].coordinates)
+                    {
+                        done = false;
+                    }
+                }
+            }
+        }
+        
         foreach (Movement move in moves)
         {
             MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
@@ -255,23 +332,11 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             }
         }
         // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
-        // Check for player collisions, calculate a winner;
-        // Loser gets thrown into the direction the winner chose to face;
-        // Draw results in both players being knocked away from the spot (need to think about how to deal with being knocked into another player as a result of this
-        //     maybe bump the third player further in the direction)
         // movement anime
-
-        // Once Players all moved, detect if they've landed on an item, trigger item effects using the direction of the players as a parameter
-        // Resolve effects/Play animations
-
         // wait for next turn, generate which direction (up/down/left/right) the next wave of items comes from
 
     }
 
-    public void FightOverTile(List<int> indices)
-    {
-        return;
-    }
     public void SetDefaults()
     {
         numPlayers = 0;
@@ -376,7 +441,6 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 SecondClick = false;
                 return;
             }
-            Debug.Log("moving player " + move.index + " to (" + move.coordinates.x + "," + move.coordinates.y + " facing " + move.direction);
             moves.Add(move);
             CycleActivePlayer();
             SecondClick = false;
