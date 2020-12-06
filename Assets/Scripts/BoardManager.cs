@@ -120,7 +120,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     }
     public void SpawnPlayer(int index, int x, int y)
     {
-        GameObject go = Instantiate(CharacterPrefabs[index], GetTileCenter(x, y), Quaternion.identity) as GameObject;
+        GameObject go = Instantiate(CharacterPrefabs[0], GetTileCenter(x, y), Quaternion.identity) as GameObject;
         go.transform.SetParent(transform);
         Character player = go.GetComponent<Character>();
 
@@ -201,7 +201,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         }
 
         List<int> ItemWave = new List<int>();
-                
+
                 //TODO: add item codes into the below fruitloopz
 
         if (waveDirection == 0)
@@ -341,7 +341,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 }
             }
         }
-        
+
         foreach (Movement move in moves)
         {
             MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
