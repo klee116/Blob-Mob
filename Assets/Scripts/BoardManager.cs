@@ -29,7 +29,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     private Tilemap tileMap;
     public Tilemap Highlights;
     public Tilemap ItemTilemap;
-    public int[,] TileList;
+    public int waveDirection;
     public GameObject[] CharacterPrefabs;
     public List<Character> CharacterList;
     private List<Movement> moves;
@@ -67,12 +67,6 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     {
         UpdateSelection();
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TMG.Generate();
-            MovePlayer(0, 6, 6);
-            //insert make character lose health here when ready to test
-        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             if (CharacterList[0].SetHealthMax())
@@ -91,8 +85,16 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         }
 #endif
         waitClick();
-
         receivePlayersInputs();
+    }
+    public void SetDefaults()
+    {
+        numPlayers = 0;
+        ActivePlayer = 0;
+        H = TMG.tileArea.size.y; W = TMG.tileArea.size.x;
+        SecondClick = false;
+        move = new Movement();
+        waveDirection = 0;
     }
 
     public void SpawnAllPlayers()
@@ -101,7 +103,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
         SpawnPlayer(1, 3, 3);
-        //SpawnPlayer(2, 5, 3);
+        SpawnPlayer(2, 5, 3);
+        SpawnPlayer(3, 6, 8);
     }
 
     private void CycleActivePlayer()
@@ -188,11 +191,20 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         items.Add(toAdd);
         itemController.SetTile(type, position);
     }
-    public void SpawnItemWave(int x)
+    public void SpawnItemWave()
     {
-        // x = 1-4 , 1 = top, 2 = bottom, 3 = left, 4 = right (side of the map that the next wave of items spawns from)
+        // x: 1 = top, 2 = bottom, 3 = left, 4 = right (side of map that next wave spawns from)
+        int x = Random.Range(0,4); //pick new direction, or stay the same. (same has twice the chance)
+        if (x != 4)
+        {
+            waveDirection = x;
+        }
 
-        if (x == 0)
+        List<int> ItemWave = new List<int>();
+                
+                //TODO: add item codes into the below fruitloopz
+
+        if (waveDirection == 0)
         {
             // execute 'from top' scenario
 
@@ -201,9 +213,18 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Row H (top)
             // delete items on Row 1
             // all items move y position to position - 1
+            for (int i = 0; i < W; i++)
+            {
+                ItemWave.Add(Random.Range(0,100));
+            }
+
         }
-        else if (x == 1)
+        else if (waveDirection == 1)
         {
+            for (int i = 0; i < W; i++)
+            {
+                ItemWave.Add(Random.Range(0,100));
+            }
             //execute 'from bottom' scenario
 
             // generate W items (or nulls)
@@ -211,8 +232,12 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // delete items on Row H
             // all items move y position to position - 1
         }
-        else if (x == 2)
+        else if (waveDirection == 2)
         {
+            for (int i = 0; i < H; i++)
+            {
+                ItemWave.Add(Random.Range(0,100));
+            }
             //execute 'from left' scenario
 
             // generate H items (or nulls)
@@ -220,8 +245,12 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // delete items on Column W
             // all items move x position to position + 1
         }
-        else if (x == 3)
+        else if (waveDirection == 3)
         {
+            for (int i = 0; i < H; i++)
+            {
+                ItemWave.Add(Random.Range(0,100));
+            }
             //execute 'from right' scenario
 
             // generate H items (or nulls)
@@ -337,14 +366,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
     }
 
-    public void SetDefaults()
-    {
-        numPlayers = 0;
-        ActivePlayer = 0;
-        H = TMG.tileArea.size.y; W = TMG.tileArea.size.x;
-        SecondClick = false;
-        move = new Movement();
-    }
+
     private Vector3 GetTileCenter(int x, int y)
     {
         return tileMap.CellToWorld(new Vector3Int(x, y, 0)) + PlayerSpriteOffset;

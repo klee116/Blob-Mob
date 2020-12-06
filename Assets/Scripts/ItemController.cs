@@ -40,7 +40,6 @@ public class ItemController : MonoBehaviour
       tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
 
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -76,6 +75,8 @@ public class ItemController : MonoBehaviour
 
       tileMap.SetTilesBlock(tileArea, tileArray);
     }
+
+    
 
     public void Activated(Vector2Int position)
     {
