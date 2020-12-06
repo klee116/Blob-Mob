@@ -57,26 +57,14 @@ public class ItemController : MonoBehaviour
       }
 
       foreach ( Item item in newItems) {
-        dictionary.Add(item.GetPosition(), tiles[item.getType()]);
-      }
-
-      for (int y = 0; y < tileArea.size.y; y++)
-      {
-          for (int x = 0; x < tileArea.size.x; x++)
-          {
-            Vector2Int position = new Vector2Int(x,y);
-            TileBase tile;
-            if (dictionary.TryGetValue(position, out tile))
-            {
-              tileArray[y * tileArea.size.x + x] = tile;
-            }
-          }
+        Vector2Int position = item.GetPosition();
+        tileArray[position.y * tileArea.size.x + position.x] =  tiles[item.getType()];
       }
 
       tileMap.SetTilesBlock(tileArea, tileArray);
     }
 
-    
+
 
     public void Activated(Vector2Int position)
     {
