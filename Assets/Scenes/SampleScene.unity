@@ -565,7 +565,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenOptions: []
-  testSeed: 0
+  defaultTile: {fileID: 11400000, guid: 11491b64a8f3e504482d281e09bba2c7, type: 2}
+  testSeed: 1
   ground1: {fileID: 11400000, guid: 11491b64a8f3e504482d281e09bba2c7, type: 2}
   ground2: {fileID: 11400000, guid: b7a42bb674a500545846b933f44daef6, type: 2}
   ground3: {fileID: 11400000, guid: 18bee41a890f48a4c866dfaa105b0f33, type: 2}
@@ -681,6 +682,7 @@ MonoBehaviour:
   - {fileID: 4119736676359424531, guid: 779cc8c96a360c143923114977790c44, type: 3}
   - {fileID: 4119736676359424531, guid: 779cc8c96a360c143923114977790c44, type: 3}
   CharacterList: []
+  waveDirection: 0
   deathMenu: {fileID: 1869418837}
 --- !u!19719996 &738705363
 TilemapCollider2D:

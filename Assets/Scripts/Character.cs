@@ -32,7 +32,7 @@ public class Character : MonoBehaviour
         }
         possibleMoves = new bool[x,y];
         maxHeight = x; maxWidth = y;
-        Speed = 3; Attack = 3; Index = i;
+        Speed = 10; Attack = 3; Index = i;
         SetHealthMax();
         getMoves();
     }
@@ -98,9 +98,9 @@ public class Character : MonoBehaviour
     }
     public bool[,] getMoves()
     {
-        for (int i = 0; i < maxWidth; i++)
+        for (int i = 2; i < maxWidth - 2; i++)
         {
-            for (int j = 0; j < maxHeight; j++)
+            for (int j = 2; j < maxHeight - 2; j++)
             {
                 if (Mathf.Abs(CurrentX - i) + Mathf.Abs(CurrentY - j) <= Speed)
                 {

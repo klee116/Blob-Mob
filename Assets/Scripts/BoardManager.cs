@@ -103,9 +103,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
-        SpawnPlayer(1, 3, 3);
-        SpawnPlayer(2, 5, 3);
-        SpawnPlayer(3, 6, 8);
+        //SpawnPlayer(1, 3, 3);
+        //SpawnPlayer(2, 5, 3);
+        //SpawnPlayer(3, 6, 8);
     }
 
     private void CycleActivePlayer()

@@ -6,7 +6,6 @@ using UnityEngine.Tilemaps;
 public class BoardHighlights : MonoBehaviour
 {
     public TileBase possible, selected;
-
     public Tilemap tileMap;
     private int[,] intMap;
     private TileBase[] tileArray;
@@ -16,20 +15,12 @@ public class BoardHighlights : MonoBehaviour
     {
        tileMap = GetComponent<Tilemap>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void Generate(int W, int H)
     {
         intMap = new int[W, H];
         tileArea.size = new Vector3Int(W,H,1);
         tileArray = new TileBase[tileArea.size.x * tileArea.size.y];
     }
-
     public void UpdatePlayerHighlights(bool[,] possibleMoves, int X, int Y, bool SecondClick, Movement move)
     {
         if (!SecondClick)
@@ -52,9 +43,9 @@ public class BoardHighlights : MonoBehaviour
         }
         else 
         {
-            for (int y = 0; y < tileArea.size.y; y++)
+            for (int y = 2; y < tileArea.size.y -2; y++)
             {
-                for (int x = 0; x < tileArea.size.x; x++)
+                for (int x = 2; x < tileArea.size.x -2; x++)
                 {
                     if (Mathf.Abs(x - move.coordinates.x) + Mathf.Abs(y - move.coordinates.y) == 1)
                     {
@@ -73,10 +64,5 @@ public class BoardHighlights : MonoBehaviour
         }
 
         tileMap.SetTilesBlock(tileArea, tileArray);
-    }
-
-    public void SecondClickHighlights(Movement move)
-    {
-
     }
 }

@@ -51,13 +51,16 @@ public class TileMapGen : MonoBehaviour
         {
             for (int x = 0; x < tileArea.size.x; x++)
             {
-                if (intMap[x, y] > 0)
+                if ((x > 1) && (y > 1) && (x < tileArea.size.x - 2) && (y < tileArea.size.y -2))
                 {
-                    tileArray[y * tileArea.size.x + x] = mapGenOptions[intMap[x, y] - 1].tileBase;
-                }
-                else
-                {
-                    tileArray[y * tileArea.size.x + x] = defaultTile;
+                    if (intMap[x, y] > 0)
+                    {
+                        tileArray[y * tileArea.size.x + x] = mapGenOptions[intMap[x, y] - 1].tileBase;
+                    }
+                    else
+                    {
+                        tileArray[y * tileArea.size.x + x] = defaultTile;
+                    }
                 }
             }
         }
