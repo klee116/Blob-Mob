@@ -29,21 +29,22 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     private Tilemap tileMap;
     public Tilemap Highlights;
     public Tilemap ItemTilemap;
-    public int waveDirection;
     public GameObject[] CharacterPrefabs;
     public List<Character> CharacterList;
     private List<Movement> moves;
+    private List<Item> items;
     private ItemController itemController;
+    //xpublic GameObject[] itemSpawner;
     private int numPlayers;
     private int alivePlayers;
     private int ActivePlayer;
     private int W, H;
-    private const float TILE_SIZE = 1.0f;
-    private const float TILE_OFFSET = 0.5f;
+    
     private int selectionX = -1;
     private int selectionY = -1;
-    private List<Item> items;
+    
     private List<bool> initializedPlayers;
+    public int waveDirection;
     public DeathMenu deathMenu;
     bool SecondClick; Movement move;
     void Start()
@@ -199,11 +200,16 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         {
             waveDirection = x;
         }
-
         List<int> ItemWave = new List<int>();
 
                 //TODO: add item codes into the below fruitloopz
 
+        for (int i = 0; i < Mathf.Max(H,W); i++)
+        {
+            ItemWave.Add(Random.Range(0,100));
+            
+        }
+                //TODO: add item codes into the below fruitloopz
         if (waveDirection == 0)
         {
             // execute 'from top' scenario
@@ -213,10 +219,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Row H (top)
             // delete items on Row 1
             // all items move y position to position - 1
-            for (int i = 0; i < W; i++)
-            {
-                ItemWave.Add(Random.Range(0,100));
-            }
+            
 
         }
         else if (waveDirection == 1)
