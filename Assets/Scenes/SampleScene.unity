@@ -572,7 +572,7 @@ MonoBehaviour:
   ground3: {fileID: 11400000, guid: 18bee41a890f48a4c866dfaa105b0f33, type: 2}
   tileArea:
     m_Position: {x: 0, y: 0, z: 0}
-    m_Size: {x: 15, y: 15, z: 1}
+    m_Size: {x: 12, y: 12, z: 1}
 --- !u!483693784 &738705360
 TilemapRenderer:
   m_ObjectHideFlags: 0
@@ -765,7 +765,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3
+  orthographic size: 3.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -789,7 +789,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalPosition: {x: 0, y: 2.25, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -845,8 +845,8 @@ MonoBehaviour:
   health: {fileID: 11400000, guid: c5b226f36b8cc5540af254a4e58ad63f, type: 2}
   attack: {fileID: 11400000, guid: 290af8330ce7ecb46a33394e43d0950d, type: 2}
   tileArea:
-    m_Position: {x: 0, y: 0, z: 0}
-    m_Size: {x: 15, y: 15, z: 1}
+    m_Position: {x: 0, y: 0, z: 1}
+    m_Size: {x: 12, y: 12, z: 1}
 --- !u!483693784 &1624837388
 TilemapRenderer:
   m_ObjectHideFlags: 0
