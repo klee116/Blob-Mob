@@ -48,6 +48,8 @@ public class RoomLauncher : MonoBehaviourPunCallbacks
         int seed = seedGen.Next();
 
         RoomOptions roomOptions = new RoomOptions();
+        PhotonNetwork.AutomaticallySyncScene = true;
+        roomOptions.MaxPlayers = maxPlayersPerRoom;
         roomOptions.CustomRoomPropertiesForLobby = new string[]{ SEED_PROP_KEY };
         roomOptions.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
         roomOptions.CustomRoomProperties.Add(SEED_PROP_KEY, seed);
@@ -78,6 +80,9 @@ public class RoomLauncher : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsMasterClient)
         {
             Debug.LogError("Trying to Load a level but we are not the master client o no");
+        }
+        else
+        {
             PhotonNetwork.LoadLevel("ProcGenTest");
         }
     }

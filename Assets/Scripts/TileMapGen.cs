@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Photon.Pun;
 
 public class TileMapGen : MonoBehaviour
 {
@@ -21,7 +22,16 @@ public class TileMapGen : MonoBehaviour
 
     public void Start()
     {
-        GenerateWithSeed(testSeed);
+        if (PhotonNetwork.InRoom)
+        {
+            object seed;
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoomLauncher.SEED_PROP_KEY, out seed);
+            GenerateWithSeed((int)seed);
+        }
+        else
+        {
+            GenerateWithSeed(testSeed);
+        }
     }
 
     void Update()
