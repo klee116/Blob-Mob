@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2838223314893713883}
   - component: {fileID: 7347941186658902762}
   - component: {fileID: 3494819314376343229}
+  - component: {fileID: 2827948640679288928}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Untagged
@@ -71,15 +72,15 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1925091293
-  m_SortingLayer: -3
+  m_SortingLayer: -1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 6051301685105915434, guid: 13effef3774f8a84bb9106d5bba8b185,
+  m_Sprite: {fileID: -8503652579490355953, guid: 946697d5fdfb14484a760b1f3701175c,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.546875, y: 0.546875}
+  m_Size: {x: 2.04, y: 1.03}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -99,11 +100,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   Speed: 0
+  Attack: 0
   healthBarPrefab: {fileID: 8352028610238545130, guid: 9a1339be238e448a1bc1847c3eaa998e,
     type: 3}
   Score: 0
+  Index: 0
   deathMenu: {fileID: 4208365503585971019, guid: 8d3abf62f12bb494f85470cf977ead89,
     type: 3}
+--- !u!95 &2827948640679288928
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4119736676359424531}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8ee1fbc09053242e9b98da1e9ee9bf5c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7882548497412742188
 GameObject:
   m_ObjectHideFlags: 0

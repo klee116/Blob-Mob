@@ -17,6 +17,8 @@ public class ItemController : MonoBehaviour
     public TileBase health;
     public TileBase attack;
 
+    public GameObject bombAnimation;
+
 
     public BoundsInt tileArea;
     private Tilemap tileMap;
