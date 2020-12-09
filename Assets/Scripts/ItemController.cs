@@ -17,7 +17,8 @@ public class ItemController : MonoBehaviour
     public TileBase health;
     public TileBase attack;
 
-    public GameObject bombAnimation;
+    public GameObject bombPrefab;
+    public Vector3 BombSpriteOffset;
 
 
     public BoundsInt tileArea;
@@ -70,6 +71,11 @@ public class ItemController : MonoBehaviour
 
     public void Activated(Vector2Int position)
     {
+      if (tileArray[position.y * tileArea.size.x + position.x] == bomb)
+        {
+            GameObject animBomb = Instantiate(bombPrefab, GetTileCenter(position.x, position.y), Quaternion.identity) as GameObject;
+        }
+
       tileArray[position.y * tileArea.size.x + position.x] = null;
       tileMap.SetTilesBlock(tileArea, tileArray);
 
@@ -80,4 +86,10 @@ public class ItemController : MonoBehaviour
       tileArray[position.y * tileArea.size.x + position.x] = bomb;
       tileMap.SetTilesBlock(tileArea, tileArray);
     }
+
+    private Vector3 GetTileCenter(int x, int y)
+    {
+        return tileMap.CellToWorld(new Vector3Int(x, y, 0)) + BombSpriteOffset;
+    }
 }
+
