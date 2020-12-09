@@ -32,7 +32,7 @@ public class Character : MonoBehaviour
         }
         possibleMoves = new bool[x,y];
         maxHeight = x; maxWidth = y;
-        Speed = 10; Attack = 3; Index = i;
+        Attack = 3; Index = i;
         SetHealthMax();
         getMoves();
     }

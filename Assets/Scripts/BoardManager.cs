@@ -103,8 +103,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
-        //SpawnPlayer(1, 3, 3);
-        //SpawnPlayer(2, 5, 3);
+        SpawnPlayer(1, 3, 4);
+        SpawnPlayer(2, 5, 4);
         //SpawnPlayer(3, 6, 8);
     }
 
@@ -152,7 +152,27 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         items.Add(bomb);
 
         bomb = new BombItem();
-        bomb.SetPosition(new Vector2Int(5, 2));
+        bomb.SetPosition(new Vector2Int(5, 8));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(7, 4));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(5, 6));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(7, 4));
+
+        items.Add(bomb);
+
+        bomb = new BombItem();
+        bomb.SetPosition(new Vector2Int(4, 6));
 
         items.Add(bomb);
 
