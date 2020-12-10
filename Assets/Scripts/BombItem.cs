@@ -57,5 +57,7 @@ public class BombItem : Item
         }
       }
 
+      boardManager.playBomb.Play();
+
     }
 }

@@ -22,7 +22,7 @@ public class DeathMenu : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-        scoreText.text = "TEST SCORE TEXT";
+        ///scoreText.text = "TEST SCORE TEXT";
         //scoreText.text = INSERT PLAYER'S SCORE HERE!``````````````````````
     }
     // Update is called once per frame

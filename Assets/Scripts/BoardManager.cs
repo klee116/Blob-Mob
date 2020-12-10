@@ -20,6 +20,8 @@ public class Movement
 
 public class BoardManager : MonoBehaviour, IOnEventCallback
 {
+        public AudioSource playBomb;
+        public AudioSource playShowdown;
     public const byte SendMoveEventCode = 1;
     public const byte FinishInitEventCode = 2;
     public TileMapGen TMG;
@@ -343,7 +345,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             {
                 if (i.index != winnerIndex)
                 {
-                    DamagePlayer(i.index, 50);
+                    DamagePlayer(i.index, 100);
+                    playShowdown.Play();
                     toRemove.Add(i);
                 }
             }
@@ -511,8 +514,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             alivePlayers--;
             CharacterList[index].isDead = true;
             // if(PhotonNetwork.PlayerList.IsLocal)
+            if (index == 0)
             deathMenu.ToggleDeathMenu(5);
-
+            //Destroy(CharacterPrefabs[index]);
         }
     }
 
