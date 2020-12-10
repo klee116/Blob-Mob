@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using System.Collections.Generic;
 using UnityEngine.Assertions;
 using Photon.Pun;
 using Photon.Realtime;
@@ -52,10 +51,16 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     void Start()
     {
         tileMap = GetComponent<Tilemap>();
-        TMG.Generate();
-        // object seed;
-        // PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoomLauncher.SEED_PROP_KEY, out seed);
-        // TMG.GenerateWithSeed((int) seed);
+        if (PhotonNetwork.InRoom)
+        {
+            object seed;
+            PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoomLauncher.SEED_PROP_KEY, out seed);
+            TMG.GenerateWithSeed((int) seed);
+        }
+        else
+        {
+            TMG.Generate();
+        }
         SetDefaults();
         BoardHighlights = Highlights.GetComponent<BoardHighlights>();
         BoardHighlights.Generate(W, H);
