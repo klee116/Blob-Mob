@@ -78,7 +78,7 @@ public class ItemController : MonoBehaviour
 
       tileArray[position.y * tileArea.size.x + position.x] = null;
       tileMap.SetTilesBlock(tileArea, tileArray);
-
+      
     }
 
     public void SetTile(int type, Vector2Int position)

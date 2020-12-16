@@ -115,7 +115,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         //SpawnPlayer(3, 6, 8);
     }
 
-    private void CycleActivePlayer()
+    private void CycleActivePlayer() //This is just for controlling everyone on one client for developing purposes
     {
         if (ActivePlayer >= numPlayers - 1 || ActivePlayer < 0)
         {
@@ -376,6 +376,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         foreach (Movement move in moves)
         {
             MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
+        }
+        foreach (Movement move in moves)
+        {
             List<Item> toRemove = new List<Item>();
             foreach (Item item in items)
             {

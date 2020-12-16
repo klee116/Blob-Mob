@@ -42,6 +42,7 @@ public class BombItem : Item
         if ( character.GetPosition() == position )
         {
           activator = character;
+          Debug.Log("Player " + activator.GetIndex() + " activated bomb on " + position.x + "," + position.y);
         }
       }
 
