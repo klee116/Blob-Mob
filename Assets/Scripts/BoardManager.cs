@@ -143,47 +143,47 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     {
         //procgen the first set up items on the board (avoid player spawns ig)
 
-        BombItem bomb = new BombItem();
+        Item_Bomb bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(5, 3));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(6, 3));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(4, 4));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(5, 8));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(7, 4));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(5, 6));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(7, 4));
 
         items.Add(bomb);
 
-        bomb = new BombItem();
+        bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(4, 6));
 
         items.Add(bomb);
 
-        HealItem health = new HealItem();
+        Item_Heal health = new Item_Heal();
 
         health.SetPosition(new Vector2Int(3, 3));
 
@@ -200,14 +200,14 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
     public void SpawnItem(int type, Vector2Int position)
     {
-        Item toAdd = new BombItem();
+        Item toAdd = new Item_Bomb();
         if (type == 1)
         {
-            toAdd = new BombItem();
+            toAdd = new Item_Bomb();
         }
         else if (type == 2)
         {
-            toAdd = new BombItem();
+            toAdd = new Item_Bomb();
         }
 
         else //default to bomb

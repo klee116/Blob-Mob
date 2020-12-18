@@ -2,20 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombItem : Item
+public class Item_Bomb : Item
 {
     int type = 1;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     Vector2Int position;
     public void setType(int x)
     {

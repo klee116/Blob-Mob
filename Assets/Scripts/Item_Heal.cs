@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealItem : Item
+public class Item_Heal : Item
 {
     int type = 2;
     // Start is called before the first frame update

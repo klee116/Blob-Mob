@@ -2,20 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackItem : Item
+public class Item_AttackUp : Item
 {
     int type = 3;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     Vector2Int position;
     public void setType(int x)
     {
