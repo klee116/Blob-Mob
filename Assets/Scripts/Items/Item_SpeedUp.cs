@@ -30,6 +30,8 @@ int type = 4;
         if ( character.GetPosition() == position )
         {
           character.ModifySpeed(1);
+          Debug.Log("Player " + character.GetIndex() + " Speedupped on " + 
+          position.x + "," + position.y + " Speed: " + character.Speed);
         }
       }
     }

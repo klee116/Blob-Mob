@@ -30,6 +30,8 @@ public class Item_AttackUp : Item
         if ( character.GetPosition() == position )
         {
           character.ModifyAttack(1);
+          Debug.Log("Player " + character.GetIndex() + " Attackupped on " + 
+          position.x + "," + position.y + " Attack: " + character.Attack);
         }
       }
     }

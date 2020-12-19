@@ -40,6 +40,9 @@ public class Item_Heal : Item
         if ( character.GetPosition() == position )
         {
           character.ModifyHealth(25);
+          Debug.Log("Player " + character.GetIndex() + " Healed on " + 
+          position.x + "," + position.y + " Health: " + character.Health);
+
         }
       }
     }
