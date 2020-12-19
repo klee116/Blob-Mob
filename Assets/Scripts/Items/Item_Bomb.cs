@@ -39,9 +39,9 @@ public class Item_Bomb : Item
       foreach (Character character in boardManager.CharacterList)
       {
         if ((((character.GetPosition().x == position.x)
-          && ( Mathf.Abs(character.GetPosition().y - position.y) < activator.GetAttack())
+          && ( Mathf.Abs(character.GetPosition().y - position.y) <= activator.GetAttack())
           ) || ((character.GetPosition().y == position.y)
-            && ( Mathf.Abs(character.GetPosition().x - position.x) < activator.GetAttack())
+            && ( Mathf.Abs(character.GetPosition().x - position.x) <= activator.GetAttack())
           )) && character != activator && !character.isDead)
         {
             boardManager.DamagePlayer(character.GetIndex(), 25 * activator.GetAttack());
