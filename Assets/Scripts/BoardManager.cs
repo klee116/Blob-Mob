@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.Assertions;
 using Photon.Pun;
 using Photon.Realtime;
+using Photon.Pun.UtilityScripts;
 using ExitGames.Client.Photon;
 
 public enum Direction { left, right, up, down };
@@ -53,9 +54,12 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         tileMap = GetComponent<Tilemap>();
         if (PhotonNetwork.InRoom)
         {
+            ActivePlayer = PhotonNetwork.LocalPlayer.GetPlayerNumber();
             object seed;
             PhotonNetwork.CurrentRoom.CustomProperties.TryGetValue(RoomLauncher.SEED_PROP_KEY, out seed);
             TMG.GenerateWithSeed((int)seed);
+            initializedPlayers = new List<bool>(PhotonNetwork.CurrentRoom.PlayerCount);
+            initializedPlayers[ActivePlayer] = true;
         }
         else
         {
@@ -69,6 +73,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         items = new List<Item>();
         itemController = ItemTilemap.GetComponent<ItemController>();
         SpawnInitialItems();
+        SendFinishInitEvent();
     }
 
     void Update()
@@ -568,10 +573,15 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 return;
             }
             moves.Add(move);
-            CycleActivePlayer();
-            SecondClick = false;
-            //TODO: send move over photon
-            System.Threading.Thread.Sleep(100);
+            if (PhotonNetwork.InRoom) {
+                SendMoveEvent();
+            }
+            else {
+                CycleActivePlayer();
+                SecondClick = false;
+                //TODO: send move over photon
+                System.Threading.Thread.Sleep(100);
+            }
         }
 
     }
@@ -601,6 +611,11 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     // Sends the moves of the active player to every other player
     private void SendFinishInitEvent()
     {
+        if (!PhotonNetwork.InRoom) {
+            Debug.LogWarning("Finish Init Event called, but we are not connected to a Room!");
+            return;
+        }
+
         object[] content = new object[1];
         content[0] = ActivePlayer;
         RaiseEventOptions raiseEventOptions = new RaiseEventOptions();
@@ -610,6 +625,11 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     // Sends the moves of the active player to every other player
     private void SendMoveEvent()
     {
+        if (!PhotonNetwork.InRoom) {
+            Debug.LogWarning("Move Event called, but we are not connected to a Room!");
+            return;
+        }
+
         object[] content = new object[2];
         content[0] = ActivePlayer;
         content[1] = moves[ActivePlayer];
