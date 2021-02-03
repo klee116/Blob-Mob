@@ -46,7 +46,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     private int selectionY = -1;
 
     private List<bool> initializedPlayers;
-    public int waveDirection;
+    public Direction waveDirection;
     public DeathMenu deathMenu;
     bool SecondClick; Movement move;
     void Start()
@@ -88,22 +88,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         {
             SpawnItem(1, new Vector2Int(selectionX, selectionY));
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            PercolateItems(Direction.up);
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            PercolateItems(Direction.down);
-        }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            PercolateItems(Direction.left);
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            PercolateItems(Direction.right);
-        }
+
 #endif
         waitClick();
         receivePlayersInputs();
@@ -115,7 +100,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         H = TMG.tileArea.size.y; W = TMG.tileArea.size.x;
         SecondClick = false;
         move = new Movement();
-        waveDirection = 0;
+        waveDirection = Direction.down;
     }
 
     public void SpawnAllPlayers()
@@ -123,7 +108,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
-        SpawnPlayer(1, 3, 4);
+        //SpawnPlayer(1, 3, 4);
         //SpawnPlayer(2, 5, 4);
         //SpawnPlayer(3, 6, 8);
     }
@@ -155,7 +140,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     public void SpawnInitialItems()
     {
         //procgen the first set up items on the board (avoid player spawns ig)
-
+        /*
         Item_Bomb bomb = new Item_Bomb();
         bomb.SetPosition(new Vector2Int(5, 3));
 
@@ -202,10 +187,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
         items.Add(health);
 
+        */
         Item_AttackUp attack = new Item_AttackUp();
-
         attack.SetPosition(new Vector2Int(2, 0));
-
         items.Add(attack);
 
         itemController.SetItems(items);
@@ -223,12 +207,19 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             }
             else if (type == 2)
             {
-                toAdd = new Item_Bomb();
+                toAdd = new Item_Heal();
             }
-
+            else if (type == 3)
+            {
+                toAdd = new Item_AttackUp();
+            }
+            else if (type == 4)
+            {
+                return;
+            }
             else //default to bomb
             {
-
+                toAdd = new Item_Bomb();
             }
 
             toAdd.SetPosition(position);
@@ -243,7 +234,23 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         int x = Random.Range(0, 4); //pick new direction, or stay the same. (same has twice the chance)
         if (x != 4)
         {
-            waveDirection = x;
+            if (x == 0)
+            {
+                waveDirection = Direction.down;
+            }
+            else if (x == 1)
+            {
+                waveDirection = Direction.up;
+            }
+            else if (x == 2)
+            {
+                waveDirection = Direction.right;
+            }
+            else if (x == 3)
+            {
+                waveDirection = Direction.left;
+            }
+            else{}
         }
         List<int> ItemWave = new List<int>();
 
@@ -251,60 +258,60 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
         for (int i = 0; i < Mathf.Max(H, W); i++)
         {
-            ItemWave.Add(Random.Range(0, 100));
-
+            ItemWave.Add(Random.Range(0, 5));
         }
         //TODO: add item codes into the below fruitloopz
-        if (waveDirection == 0)
+        if (waveDirection == Direction.down)
         {
             // execute 'from top' scenario
-
             // generate W items (or nulls)
-            // (have a line of items (floating or on tiles that are separate from board) to show incoming items and which direction everything is going to move)
             // put the items on Row H (top)
             // delete items on Row 1
             // all items move y position to position - 1
-
+            for (int i = 1; i < W-1; i++)
+            {
+                SpawnItem(ItemWave[i], new Vector2Int(i, H-1));
+            }
 
         }
-        else if (waveDirection == 1)
+        else if (waveDirection == Direction.up)
         {
-            for (int i = 0; i < W; i++)
-            {
-                ItemWave.Add(Random.Range(0, 100));
-            }
             //execute 'from bottom' scenario
 
             // generate W items (or nulls)
             // put the items on Row 1 (bottom)
             // delete items on Row H
             // all items move y position to position - 1
-        }
-        else if (waveDirection == 2)
-        {
-            for (int i = 0; i < H; i++)
+            for (int i = 1; i < W-1; i++)
             {
-                ItemWave.Add(Random.Range(0, 100));
+                SpawnItem(ItemWave[i], new Vector2Int(i, 0));
             }
+        }
+        else if (waveDirection == Direction.right)
+        {
             //execute 'from left' scenario
 
             // generate H items (or nulls)
             // put the items on Column 1 (left)
             // delete items on Column W
             // all items move x position to position + 1
-        }
-        else if (waveDirection == 3)
-        {
-            for (int i = 0; i < H; i++)
+            for (int i = 1; i < H-1; i++)
             {
-                ItemWave.Add(Random.Range(0, 100));
+                SpawnItem(ItemWave[i], new Vector2Int(0, i));
             }
+        }
+        else if (waveDirection == Direction.left)
+        {
             //execute 'from right' scenario
 
             // generate H items (or nulls)
             // put the items on Column W (right)
             // delete items on Column 1
             // all items move x position to position - 1
+            for (int i = 1; i < W-1; i++)
+            {
+                SpawnItem(ItemWave[i], new Vector2Int(W-1, i));
+            }
         }
         else
         {
@@ -370,8 +377,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     }
     public void ExecuteTurn() // function that drives the turn after receiving all players' turn data (Intended tile (x,y) and intended direction (up/down/left/right)) OR turn timer runs out
     {
-        //PercolateItems(Direction.right);
-
+        
         bool done = false;
         while (done == false)
         {
@@ -448,6 +454,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             }
         }
 
+        PercolateItems(waveDirection);
+        
+
         foreach (Movement move in moves)
         {
             MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
@@ -469,8 +478,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 items.Remove(item);
             }
         }
-
-
+        SpawnItemWave();
         // item wave spawns and all items move as turn executes, (to land on item you must aim where it is going to go rather than where it is when you click)
         // movement anime
         // wait for next turn, generate which direction (up/down/left/right) the next wave of items comes from
