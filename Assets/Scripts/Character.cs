@@ -10,6 +10,8 @@ public class Character : MonoBehaviour
     public int Attack; //attack power
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
+
+    public Direction Direction;
     public bool[,] possibleMoves{set;get;}
     public int maxHeight{set;get;} public int maxWidth{set;get;}
     public int Score;
@@ -32,6 +34,7 @@ public class Character : MonoBehaviour
         }
         possibleMoves = new bool[x,y];
         maxHeight = x; maxWidth = y;
+        Direction = Direction.down;
         Attack = 3; Index = i;
         SetHealthMax();
         getMoves();
@@ -84,6 +87,30 @@ public class Character : MonoBehaviour
     public void SetPosition(int x, int y)
     {
         CurrentX = x; CurrentY = y;
+    }
+    public void SetDirection(Direction d)
+    {
+        Direction = d;
+    }
+    public string GetDirection()
+    {
+        if (Direction == Direction.left)
+        {
+            return "left";
+        }
+        else if (Direction == Direction.right)
+        {
+            return "right";
+        }
+        else if (Direction == Direction.up)
+        {
+            return "up";
+        }
+        else if (Direction == Direction.down)
+        {
+            return "down";
+        }
+        else return "ERROR";
     }
     public Vector2Int GetPosition() {
       return new Vector2Int(CurrentX,CurrentY);

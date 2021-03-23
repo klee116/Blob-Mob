@@ -5,17 +5,7 @@ using UnityEngine;
 public class Item_Heal : Item
 {
     int type = 2;
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
     Vector2Int position;
     public void setType(int x)
     {

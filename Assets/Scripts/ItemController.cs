@@ -16,6 +16,8 @@ public class ItemController : MonoBehaviour
     public TileBase bomb;
     public TileBase health;
     public TileBase attack;
+    public TileBase speed;
+    public TileBase snowball;
 
     public GameObject bombPrefab;
     public Vector3 BombSpriteOffset;
@@ -40,6 +42,8 @@ public class ItemController : MonoBehaviour
         tiles.Add(1, bomb);
         tiles.Add(2, health);
         tiles.Add(3, attack);
+        tiles.Add(4, speed);
+        tiles.Add(5, snowball);
         tileArray = new TileBase[tileArea.size.x * tileArea.size.y * tileArea.size.z];
 
     }

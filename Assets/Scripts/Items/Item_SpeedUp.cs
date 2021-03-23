@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item_SpeedUp : MonoBehaviour
+public class Item_SpeedUp : Item
 {
 int type = 4;
 

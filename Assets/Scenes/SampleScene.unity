@@ -1763,6 +1763,8 @@ MonoBehaviour:
   bomb: {fileID: 11400000, guid: 14836e38d81d44ffdabaa3cdc069a1cd, type: 2}
   health: {fileID: 11400000, guid: c5b226f36b8cc5540af254a4e58ad63f, type: 2}
   attack: {fileID: 11400000, guid: 290af8330ce7ecb46a33394e43d0950d, type: 2}
+  speed: {fileID: 11400000, guid: 1e41474016a009d47ba96b2ac2b1dd06, type: 2}
+  snowball: {fileID: 11400000, guid: 53828f7678b65d04894601c134424db8, type: 2}
   bombPrefab: {fileID: 9154195943863639392, guid: 1bee1f3f43de648ff8bba03020fcddb9,
     type: 3}
   BombSpriteOffset: {x: 0, y: 0.5, z: 0}

@@ -45,7 +45,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     private int numPlayers;
     private int alivePlayers;
     private int ActivePlayer;
-    private int W, H;
+    public int W, H;
 
     private int selectionX = -1;
     private int selectionY = -1;
@@ -112,8 +112,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     {
         // Draw a yellow sphere at the transform's position
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, 1);
-        foreach(Item item in items)
+        Gizmos.DrawSphere(transform.position, 0.5f);
+        foreach (Item item in items)
         {
             Vector3Int temp = new Vector3Int(item.GetPosition()[0], item.GetPosition()[1], 1);
             Gizmos.DrawSphere(temp, 1);
@@ -125,7 +125,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         CharacterList = new List<Character>();
         moves = new List<Movement>();
         SpawnPlayer(0, 4, 7);
-        //SpawnPlayer(1, 3, 4);
+        SpawnPlayer(1, 3, 4);
         //SpawnPlayer(2, 5, 4);
         //SpawnPlayer(3, 6, 8);
     }
@@ -157,7 +157,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     public void SpawnInitialItems()
     {
         //procgen the first set up items on the board (avoid player spawns ig)
-        
+
     }
 
     public void SpawnItem(int type, Vector2Int position)
@@ -180,6 +180,22 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             }
             else if (type == 4)
             {
+                toAdd = new Item_SpeedUp();
+            }
+            else if (type == 5)
+            {
+                toAdd = new Item_Snowball();
+            }
+            else if (type == 6)
+            {
+                return;
+            }
+            else if (type == 7)
+            {
+                return;
+            }
+            else if (type == 8)
+            {
                 return;
             }
             else //default to bomb
@@ -190,7 +206,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             toAdd.SetPosition(position);
             items.Add(toAdd);
             itemController.SetTile(type, position);
-            Debug.Log("Spawned item on " + position.x + "," + position.y);
+            //Debug.Log("Spawned item on " + position.x + "," + position.y);
         }
     }
     public void SpawnItemWave()
@@ -215,7 +231,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             {
                 waveDirection = Direction.left;
             }
-            else{}
+            else { }
         }
         List<int> ItemWave = new List<int>();
 
@@ -223,7 +239,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
         for (int i = 0; i < Mathf.Max(H, W); i++)
         {
-            ItemWave.Add(Random.Range(0, 5));
+            ItemWave.Add(Random.Range(0, 8));
         }
         //TODO: add item codes into the below fruitloopz
         if (waveDirection == Direction.down)
@@ -233,9 +249,9 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Row H (top)
             // delete items on Row 1
             // all items move y position to position - 1
-            for (int i = 1; i < W-1; i++)
+            for (int i = 1; i < W - 1; i++)
             {
-                SpawnItem(ItemWave[i], new Vector2Int(i, H-1));
+                SpawnItem(ItemWave[i], new Vector2Int(i, H - 1));
             }
 
         }
@@ -247,7 +263,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Row 1 (bottom)
             // delete items on Row H
             // all items move y position to position - 1
-            for (int i = 1; i < W-1; i++)
+            for (int i = 1; i < W - 1; i++)
             {
                 SpawnItem(ItemWave[i], new Vector2Int(i, 0));
             }
@@ -260,7 +276,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Column 1 (left)
             // delete items on Column W
             // all items move x position to position + 1
-            for (int i = 1; i < H-1; i++)
+            for (int i = 1; i < H - 1; i++)
             {
                 SpawnItem(ItemWave[i], new Vector2Int(0, i));
             }
@@ -273,19 +289,21 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             // put the items on Column W (right)
             // delete items on Column 1
             // all items move x position to position - 1
-            for (int i = 1; i < W-1; i++)
+            for (int i = 1; i < W - 1; i++)
             {
-                SpawnItem(ItemWave[i], new Vector2Int(W-1, i));
+                SpawnItem(ItemWave[i], new Vector2Int(W - 1, i));
             }
         }
         else
         {
             //default to executing from top scenario, this should not execute unless theres an error in code somewhere
         }
+        itemController.SetItems(items);
 
     }
     public void PercolateItems(Direction direction) // called with direction that goes with item wave spawn direction
     {
+        List<Item> toRemove = new List<Item>();
         foreach (Item item in items)
         {
             if (direction == Direction.up)
@@ -295,7 +313,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                     item.SetPosition(new Vector2Int(item.GetPosition().x, item.GetPosition().y + 1));
                 if (item.GetPosition().y >= (H - 3))
                 {
-                    Debug.Log("Item is supposed to fall off here"); //Todo: delete the item (toosleepytofigureitoutnow)
+                    toRemove.Add(item);
+                    //Debug.Log("Item is supposed to fall off here"); //Todo: delete the item (toosleepytofigureitoutnow)
                 }
                 else
                     item.SetPosition(new Vector2Int(item.GetPosition().x, item.GetPosition().y + 1));
@@ -307,7 +326,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                     item.SetPosition(new Vector2Int(item.GetPosition().x, item.GetPosition().y - 1));
                 if (item.GetPosition().y <= 2)
                 {
-                    Debug.Log("Item is supposed to fall off here");
+                    toRemove.Add(item);
+                    //Debug.Log("Item is supposed to fall off here");
                 }
                 else
                     item.SetPosition(new Vector2Int(item.GetPosition().x, item.GetPosition().y - 1));
@@ -319,7 +339,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                     item.SetPosition(new Vector2Int(item.GetPosition().x - 1, item.GetPosition().y));
                 if (item.GetPosition().x <= 2)
                 {
-                    Debug.Log("Item is supposed to fall off here");
+                    toRemove.Add(item);
+                    //Debug.Log("Item is supposed to fall off here");
                 }
                 else
                     item.SetPosition(new Vector2Int(item.GetPosition().x - 1, item.GetPosition().y));
@@ -331,18 +352,23 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                     item.SetPosition(new Vector2Int(item.GetPosition().x + 1, item.GetPosition().y));
                 if (item.GetPosition().x >= (W - 3))
                 {
-                    Debug.Log("Item is supposed to fall off here");
+                    toRemove.Add(item);
+                    //Debug.Log("Item is supposed to fall off here");
                 }
                 else
                     item.SetPosition(new Vector2Int(item.GetPosition().x + 1, item.GetPosition().y));
             }
+        }
+        foreach (Item item in toRemove)
+        {
+            items.Remove(item);
         }
 
         itemController.SetItems(items);
     }
     public void ExecuteTurn() // function that drives the turn after receiving all players' turn data (Intended tile (x,y) and intended direction (up/down/left/right)) OR turn timer runs out
     {
-        
+
         bool done = false;
         while (done == false)
         {
@@ -420,11 +446,11 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         }
 
         PercolateItems(waveDirection);
-        
+
 
         foreach (Movement move in moves)
         {
-            MovePlayer(move.index, move.coordinates.x, move.coordinates.y);
+            MovePlayer(move.index, move.coordinates.x, move.coordinates.y, move.direction);
         }
         foreach (Movement move in moves)
         {
@@ -454,6 +480,100 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         return tileMap.CellToWorld(new Vector3Int(x, y, 0)) + PlayerSpriteOffset;
     }
 
+    public List<Character> FirstInLOS(List<Direction> LD, Vector2Int pos, int range, int limit) //finds limit players within range of pos in direction(s) contained in LD
+    {
+
+        List<Character> toAdd = new List<Character>();
+        if (range < 1 || limit < 1)
+            return toAdd;
+
+        foreach (Direction d in LD)
+        {
+            int soFar = 0;
+            Vector2Int currPos = pos;
+            switch (d)
+            {
+                case Direction.up:
+                    while ((soFar < range) && (toAdd.Count < limit)
+                    && (currPos.y < H))
+                    {
+                        currPos.y++;
+                        soFar++;
+                        foreach (Character character in CharacterList)
+                        {
+                            if (character.GetPosition() == currPos)
+                            {
+                                Debug.Log("player " + character.Index + " found in up direction");
+                                toAdd.Add(character);
+                            }
+                        }
+                    }
+                    soFar = 0;
+                    currPos = pos;
+                break;
+
+                case Direction.down:
+                    while ((soFar < range) && (toAdd.Count < limit)
+                    && (currPos.y > 0))
+                    {
+                        currPos.y--;
+                        soFar++;
+                        foreach (Character character in CharacterList)
+                        {
+                            if (character.GetPosition() == currPos)
+                            {
+                                Debug.Log("player " + character.Index + " found in down direction");
+                                toAdd.Add(character);
+                            }
+                        }
+                    }
+                    soFar = 0;
+                    currPos = pos;
+                break;
+
+                case Direction.left:
+                    while ((soFar < range) && (toAdd.Count < limit)
+                    && (currPos.x > 0))
+                    {
+                        currPos.x--;
+                        soFar++;
+                        foreach (Character character in CharacterList)
+                        {
+                            if (character.GetPosition() == currPos)
+                            {
+                                Debug.Log("player " + character.Index + " found in left direction");
+                                toAdd.Add(character);
+                            }
+                        }
+                    }
+                    soFar = 0;
+                    currPos = pos;
+                break;
+
+                case Direction.right:
+                    while ((soFar < range) && (toAdd.Count < limit)
+                    && (currPos.x <= W))
+                    {
+                        currPos.x++;
+                        soFar++;
+                        foreach (Character character in CharacterList)
+                        {
+                            if (character.GetPosition() == currPos)
+                            {
+                                Debug.Log("player " + character.Index + " found in right direction");
+                                toAdd.Add(character);
+                            }
+                        }
+                    }
+                    soFar = 0;
+                    currPos = pos;
+                break;
+
+            }
+        }
+
+        return toAdd;
+    }
     private void UpdateSelection()
     {
         if (!Camera.main)
@@ -547,10 +667,12 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 return;
             }
             moves.Add(move);
-            if (PhotonNetwork.InRoom) {
+            if (PhotonNetwork.InRoom)
+            {
                 SendMoveEvent();
             }
-            else {
+            else
+            {
                 moveClick2.Play();
                 CycleActivePlayer();
                 SecondClick = false;
@@ -561,9 +683,10 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 
     }
 
-    public void MovePlayer(int index, int x, int y)
+    public void MovePlayer(int index, int x, int y, Direction d)
     {
         CharacterList[index].SetPosition(x, y);
+        CharacterList[index].SetDirection(d);
         CharacterList[index].transform.position = GetTileCenter(x, y);
         //tilelist update ints? when ints are assigned ig
     }
@@ -586,7 +709,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     // Sends the moves of the active player to every other player
     private void SendFinishInitEvent()
     {
-        if (!PhotonNetwork.InRoom) {
+        if (!PhotonNetwork.InRoom)
+        {
             Debug.LogWarning("Finish Init Event called, but we are not connected to a Room!");
             return;
         }
@@ -600,7 +724,8 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     // Sends the moves of the active player to every other player
     private void SendMoveEvent()
     {
-        if (!PhotonNetwork.InRoom) {
+        if (!PhotonNetwork.InRoom)
+        {
             Debug.LogWarning("Move Event called, but we are not connected to a Room!");
             return;
         }

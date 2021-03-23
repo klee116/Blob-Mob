@@ -9,4 +9,5 @@ public interface Item
     Vector2Int GetPosition();
     void SetPosition(Vector2Int newPosition);
     void Activate(BoardManager boardManager);
+
 }
