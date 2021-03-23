@@ -22,6 +22,11 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 {
     public AudioSource playBomb;
     public AudioSource playShowdown;
+    public AudioSource moveClick1;
+    public AudioSource moveClick2;
+    public AudioSource playPotion;
+    public AudioSource playSpeedup;
+
     public const byte SendMoveEventCode = 1;
     public const byte FinishInitEventCode = 2;
     public TileMapGen TMG;
@@ -103,6 +108,18 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         waveDirection = Direction.down;
     }
 
+    void OnDrawGizmos()
+    {
+        // Draw a yellow sphere at the transform's position
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 1);
+        foreach(Item item in items)
+        {
+            Vector3Int temp = new Vector3Int(item.GetPosition()[0], item.GetPosition()[1], 1);
+            Gizmos.DrawSphere(temp, 1);
+        }
+    }
+
     public void SpawnAllPlayers()
     {
         CharacterList = new List<Character>();
@@ -140,59 +157,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     public void SpawnInitialItems()
     {
         //procgen the first set up items on the board (avoid player spawns ig)
-        /*
-        Item_Bomb bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(5, 3));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(6, 3));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(4, 4));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(5, 8));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(7, 4));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(5, 6));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(7, 4));
-
-        items.Add(bomb);
-
-        bomb = new Item_Bomb();
-        bomb.SetPosition(new Vector2Int(4, 6));
-
-        items.Add(bomb);
-
-        Item_Heal health = new Item_Heal();
-
-        health.SetPosition(new Vector2Int(3, 3));
-
-        items.Add(health);
-
-        */
-        Item_AttackUp attack = new Item_AttackUp();
-        attack.SetPosition(new Vector2Int(2, 0));
-        items.Add(attack);
-
-        itemController.SetItems(items);
+        
     }
 
     public void SpawnItem(int type, Vector2Int position)
@@ -535,6 +500,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             {
                 if (!CharacterList[ActivePlayer].isDead)
                 {
+                    moveClick1.Play();
                     move.coordinates = new Vector2Int(selectionX, selectionY);
                     move.index = ActivePlayer;
                     SecondClick = true;
@@ -585,6 +551,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
                 SendMoveEvent();
             }
             else {
+                moveClick2.Play();
                 CycleActivePlayer();
                 SecondClick = false;
                 //TODO: send move over photon

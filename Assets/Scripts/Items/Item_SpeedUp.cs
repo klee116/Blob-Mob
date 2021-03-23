@@ -34,5 +34,6 @@ int type = 4;
           position.x + "," + position.y + " Speed: " + character.Speed);
         }
       }
+      boardManager.playSpeedup.Play();
     }
 }

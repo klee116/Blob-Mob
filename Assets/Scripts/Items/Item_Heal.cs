@@ -45,5 +45,7 @@ public class Item_Heal : Item
 
         }
       }
+
+      boardManager.playPotion.Play();
     }
 }
