@@ -26,6 +26,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
     public AudioSource moveClick2;
     public AudioSource playPotion;
     public AudioSource playSpeedup;
+    public AudioSource playShield;
 
     public const byte SendMoveEventCode = 1;
     public const byte FinishInitEventCode = 2;
@@ -87,7 +88,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.D))
         {
-            DamagePlayer(0, 50);
+            CharacterList[0].ModifyHealth(-50);
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
@@ -188,7 +189,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             }
             else if (type == 6)
             {
-                return;
+                toAdd = new Item_Shield();
             }
             else if (type == 7)
             {
@@ -422,7 +423,7 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
             {
                 if (i.index != winnerIndex)
                 {
-                    DamagePlayer(i.index, 100);
+                    CharacterList[i.index].ModifyHealth(-99999);
                     playShowdown.Play();
                     toRemove.Add(i);
                 }
@@ -689,21 +690,6 @@ public class BoardManager : MonoBehaviour, IOnEventCallback
         CharacterList[index].SetDirection(d);
         CharacterList[index].transform.position = GetTileCenter(x, y);
         //tilelist update ints? when ints are assigned ig
-    }
-
-    public void DamagePlayer(int index, int damageAmount)
-    {
-        CharacterList[index].ModifyHealth(-1 * damageAmount);
-        if (CharacterList[index].Health <= 0)
-        {
-            //insert death function here
-            alivePlayers--;
-            CharacterList[index].isDead = true;
-            // if(PhotonNetwork.PlayerList.IsLocal)
-            if (index == 0)
-                deathMenu.ToggleDeathMenu(5);
-            //Destroy(CharacterPrefabs[index]);
-        }
     }
 
     // Sends the moves of the active player to every other player

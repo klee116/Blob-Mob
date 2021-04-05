@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     public bool isDead;
     public int Speed; //movement speed
     public int Attack; //attack power
+    public int Shield;
     public GameObject healthBarPrefab;
     private int CurrentX{set;get;} private int CurrentY{set;get;}
 
@@ -35,7 +36,7 @@ public class Character : MonoBehaviour
         possibleMoves = new bool[x,y];
         maxHeight = x; maxWidth = y;
         Direction = Direction.down;
-        Attack = 3; Index = i;
+        Attack = 3; Index = i; Shield = 0;
         SetHealthMax();
         getMoves();
     }
@@ -54,13 +55,22 @@ public class Character : MonoBehaviour
     }
     public void ModifyHealth(int x)
     {
-        Health+=x;
-        if (Health <= 0)
+        if (Shield >= 1)
         {
-            Health = 0;
+            Shield--;
+            Debug.Log("Player " + Index + " shield broke, remaining shield: " + Shield);
         }
+        else
+        {
+            Debug.Log("Player " + Index + " got hit for " + x + ", remaining health: " + Health);
+            Health+=x;
+            if (Health <= 0)
+            {
+                Health = 0;
+            }
 
-        healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
+            healthBar.transform.localScale = new Vector3(Health/100.0f, .1f, 1);
+        }
 
     }
     public void ModifySpeed(int x)
@@ -72,6 +82,16 @@ public class Character : MonoBehaviour
             Speed = 1;
         }
     }
+
+    public void ModifyShield(int x)
+    {
+        Shield += x;
+        if (Speed < 1)
+        {
+            Shield = 0;
+        }
+    }
+
     public int GetAttack(){
       return Attack;
     }

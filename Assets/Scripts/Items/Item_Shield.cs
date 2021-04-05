@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Item_SpeedUp : Item
+public class Item_Shield : Item
 {
-    int type = 4;
-
+    int type = 6;
+    // Start is called before the first frame update
     Vector2Int position;
     public void setType(int x)
     {
@@ -20,7 +20,7 @@ public class Item_SpeedUp : Item
     {
         return position;
     }
-
+    
     public int getType()
     {
         return type;
@@ -33,11 +33,11 @@ public class Item_SpeedUp : Item
         {
             if (character.GetPosition() == position)
             {
-                character.ModifySpeed(1);
-                Debug.Log("Player " + character.GetIndex() + " Speedupped on " +
-                position.x + "," + position.y + " Speed: " + character.Speed);
+                character.ModifyShield(1);
+                Debug.Log("Player " + character.GetIndex() + " Shielded on " +
+                position.x + "," + position.y + " Shield: " + character.Shield);
             }
         }
-        boardManager.playSpeedup.Play();
+        boardManager.playShield.Play();
     }
 }
